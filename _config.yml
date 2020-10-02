@@ -43,7 +43,7 @@ social-network-links:
   github: TheoMoins
   twitter: moins_theo
 #  reddit: yourname
- linkedin: moinst
+#  linkedin: moinst
 #  xing: yourname
 #  stackoverflow: "3943160/daattali"
 #  snapchat: deanat78
@@ -97,7 +97,7 @@ navbar-col: "#4B5E65"
 navbar-text-col: "#ECECEC"
 navbar-border-col: "#DDDDDD"
 page-col: "#FFFFFF"
-text-col: "#2E588F"
+text-col: "#2F435E"
 link-col: "#FFA200"
 hover-col: "#0085A1"
 footer-col: "#4B5E65"
