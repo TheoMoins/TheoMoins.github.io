@@ -4,13 +4,13 @@ title: About me
 subtitle: Théo Moins
 ---
 
-My name is Inigo Montoya. I have the following qualities:
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+Hi! I am a PhD student at [Inria Grenoble Rhône-Alpes](https://www.inria.fr/fr/centre-inria-grenoble-rhone-alpes) in [Statify](https://team.inria.fr/statify/) team, advised by [Julyan Arbel](https://www.julyanarbel.com/), [Stéphane Girard](http://mistis.inrialpes.fr/people/girard/), and Anne Dutfoy.
 
-What else do you need?
+I am interested by systems in the intersection of statistics and computation, in order to have analytical insights on real-world applications. 
 
-### My story
+My PhD is funded by EDF R&D : I investigate how to combine Bayesian computation with statistics of extreme values for the analysis of environmental data. 
+In 2020, I did a Master at [Polytechnique Montréal](https://www.polymtl.ca/) with [Daniel Aloise](https://www.polymtl.ca/expertises/aloise-daniel) where I explore methods to predict locational choices of a customer in a hall.
+In the same time, I obtained an engineering degree at [Ensimag](https://ensimag.grenoble-inp.fr/) (Grenoble)
 
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](https://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+
