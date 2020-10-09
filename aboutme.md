@@ -5,7 +5,7 @@ subtitle: Théo Moins
 show-avatar: False
 ---
 
-<img style="float: right;" src="/assets/img/IMG_7998.png" width="220" hspace="30">
+<img style="float: right;" src="/assets/img/IMG_7998.png" width="220" hspace="30" vspace="30">
 
 
 Hi! I am a PhD student at [Inria Grenoble Rhône-Alpes](https://www.inria.fr/fr/centre-inria-grenoble-rhone-alpes) in [Statify](https://team.inria.fr/statify/) team, advised by [Julyan Arbel](https://www.julyanarbel.com/), [Stéphane Girard](http://mistis.inrialpes.fr/people/girard/), and Anne Dutfoy.
