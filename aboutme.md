@@ -5,6 +5,8 @@ subtitle: Théo Moins
 show-avatar: False
 ---
 
+![MyPhoto](/assets/img/IMG_7998_carree.png)
+
 
 Hi! I am a PhD student at [Inria Grenoble Rhône-Alpes](https://www.inria.fr/fr/centre-inria-grenoble-rhone-alpes) in [Statify](https://team.inria.fr/statify/) team, advised by [Julyan Arbel](https://www.julyanarbel.com/), [Stéphane Girard](http://mistis.inrialpes.fr/people/girard/), and Anne Dutfoy.
 
