@@ -11,4 +11,4 @@ show-avatar: True
 
 ## Theses
 
-* Théo Moins. "Modèle hybride combinant réseau de neurones convolutifs et modèle basé sur le choix pour la recommandation de sièges". Mémoire de maîtrise recherche, **Polytechnique Montréal**
+* Théo Moins. "Modèle hybride combinant réseau de neurones convolutifs et modèle basé sur le choix pour la recommandation de sièges". **Mémoire de maîtrise recherche, Polytechnique Montréal**, 2020
