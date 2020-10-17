@@ -6,5 +6,5 @@ show-avatar: True
 
 ## Publications
 
-* T. Moins, D. Aloise & S. Blanchard. "RecSeats: A Hybrid Convolutional Neural Network Choice Model for Seat Recommendations at Reserved Seating Venues". **RecSys**, 2020. 
+* T. Moins, D. Aloise & S. Blanchard. "RecSeats: A Hybrid Convolutional Neural Network Choice Model for Seat Recommendations at Reserved Seating Venues". **RecSys**, 2020 ([PDF](http://www.perceptionstudies.com/papers/Moins_2020.pdf)). 
 
