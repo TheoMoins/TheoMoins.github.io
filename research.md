@@ -11,4 +11,6 @@ show-avatar: True
 
 ## Theses
 
-* Théo Moins. "Modèle hybride combinant réseau de neurones convolutifs et modèle basé sur le choix pour la recommandation de sièges". **Mémoire de maîtrise recherche, Polytechnique Montréal**, 2020
+* T. Moins. "Modèle hybride combinant réseau de neurones convolutifs et modèle basé sur le choix pour la recommandation de sièges". **Mémoire de maîtrise recherche, Polytechnique Montréal**, 2020 (*PDF soon*)
+
+* T. Moins, F. Forbes, V. Stoppin-Mellet. "Détection de signaux émis par des protéines lors d’une expérience de localisation de particules uniques" **Internship, Inria Grenoble**, 2018 ([PDF](https://hal.archives-ouvertes.fr/hal-02970036/document)) 
