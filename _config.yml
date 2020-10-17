@@ -14,6 +14,7 @@ author: Théo Moins
 # --- List of links in the navigation bar --- #
 
 navbar-links:
+  Notes: "/"
   Research: "research"
   Teaching: "teaching"
   About Me: "aboutme"
