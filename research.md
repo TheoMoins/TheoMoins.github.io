@@ -17,7 +17,7 @@ show-avatar: True
 
 * T. Moins, J. Arbel, A. Dutfoy & S. Girard. Talk: "A Bayesian Framework for Poisson Process Characterization of Extremes with Uninformative Prior" **ISBA 2021** ([link](https://events.stat.uconn.edu/ISBA2021/)) 
 
-* T. Moins, J. Arbel, A. Dutfoy & S. Girard. "On reparameterisations of the Poisson processmodel for extremes in a Bayesian framework". **JDS 2021** ([link](https://jds2021.sciencesconf.org/), *PDF Soon*)
+* T. Moins, J. Arbel, A. Dutfoy & S. Girard. "On reparameterisations of the Poisson process model for extremes in a Bayesian framework". **JDS 2021** ([link](https://jds2021.sciencesconf.org/), *PDF Soon*)
 
 <p>&nbsp;</p>
 
