@@ -1,7 +1,7 @@
 ---
 layout: page
-title: About me
-subtitle: Théo Moins
+title: Théo Moins
+subtitle: About me
 show-avatar: False
 ---
 
