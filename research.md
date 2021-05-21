@@ -6,7 +6,7 @@ show-avatar: True
 
 ## Publications
 
-* T. Moins, J. Arbel, A. Dutfoy & S. Girard. Discussion of "Rank-Normalization, Folding, and Localization: An Improved $\hat{R}$ for Assessing Convergence of MCMC" by Vehtari et al. **Bayesian Analysis**, 2021 ([PDF](https://hal.inria.fr/hal-03222934))
+* T. Moins, J. Arbel, A. Dutfoy & S. Girard. Discussion of "Rank-Normalization, Folding, and Localization: An Improved $\hat{R}$ for Assessing Convergence of MCMC" by Vehtari et al. **Bayesian Analysis**, 2021 ([PDF](https://hal.inria.fr/hal-03222934){:target="_blank"})
 
 * T. Moins, D. Aloise & S. Blanchard. "RecSeats: A Hybrid Convolutional Neural Network Choice Model for Seat Recommendations at Reserved Seating Venues". **RecSys**, 2020 ([link](https://recsys.acm.org/recsys20/), [PDF](http://www.perceptionstudies.com/papers/Moins_2020.pdf), [HTML](https://dl.acm.org/doi/fullHtml/10.1145/3383313.3412263)). 
 
