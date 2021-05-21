@@ -22,7 +22,7 @@ show-avatar: True
 <p>&nbsp;</p>
 
 
-## Theses
+## Thesis
 
 * T. Moins. "Modèle hybride combinant réseau de neurones convolutifs et modèle basé sur le choix pour la recommandation de sièges". **Mémoire de maîtrise recherche, Polytechnique Montréal**, 2020 ([PDF](https://publications.polymtl.ca/5336/))
 
