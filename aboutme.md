@@ -5,7 +5,7 @@ subtitle: About me
 show-avatar: False
 ---
 
-<img style="float: right;" src="/assets/img/photo_webpage2.jpg" width="260" hspace="30" vspace="30">
+<img style="float: right;" src="/assets/img/photo_webpage2.jpg" width="300" hspace="30" vspace="30">
 
 {: style="text-align: justify"}
 Hi! I am a PhD student at [Inria Grenoble Rhône-Alpes](https://www.inria.fr/fr/centre-inria-grenoble-rhone-alpes){:target="_blank"} in [Statify](https://team.inria.fr/statify/) team, supervised by [Julyan Arbel](https://www.julyanarbel.com/){:target="_blank"}, [Stéphane Girard](http://mistis.inrialpes.fr/people/girard/){:target="_blank"}, and Anne Dutfoy.
