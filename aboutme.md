@@ -7,8 +7,6 @@ show-avatar: False
 
 <img style="float: right;" src="/assets/img/photo_webpage2.jpg" height="400" hspace="30" vspace="20">
 
-<!-- {% include image.html url="/assets/img/photo_webpage2.jpg" description="Don't hesitate to contact  <a href="https://sites.google.com/site/mrvladimirova" target="_blank">Masha</a> for your webpage photo!" %} -->
-
 {: style="text-align: justify"}
 Hi! I am a PhD student at [Inria Grenoble Rhône-Alpes](https://www.inria.fr/fr/centre-inria-grenoble-rhone-alpes){:target="_blank"} in [Statify](https://team.inria.fr/statify/) team, supervised by [Julyan Arbel](https://www.julyanarbel.com/){:target="_blank"}, [Stéphane Girard](http://mistis.inrialpes.fr/people/girard/){:target="_blank"}, and Anne Dutfoy.
 
