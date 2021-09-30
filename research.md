@@ -14,13 +14,9 @@ show-avatar: True
 ## Conferences
 
 * **CMStats 2021**, Invited Talk: "*A Bayesian Framework for Poisson Process Characterization of Extremes with Uninformative Prior*" (*upcoming*, [link](http://www.cmstatistics.org/conferences.php){:target="_blank"})
-
 * **End-to-end Bayesian learning**, Poster: "*Improving MCMC convergence diagnostic with a local version of $\hat{R}$*" (*upcoming*, [link](https://bayesatcirm.github.io/))
-
 * **BayesComp-ISBA**, Participant in a workshop (poster, video): "*Improving MCMC convergence diagnostic with a local version of $\hat{R}$*" (*upcoming*, [link](https://bayescomp-isba.github.io/measuringquality.html))
-
 * **ISBA 2021**, Contributed Talk: "*A Bayesian Framework for Poisson Process Characterization of Extremes with Uninformative Prior*" ([link](https://events.stat.uconn.edu/ISBA2021/){:target="_blank"}, [Slides](https://hal.inria.fr/hal-03347871/document){:target="_blank"}) 
-
 * **JDS 2021**, Communication & Contributed Talk: "*On reparameterisations of the Poisson process model for extremes in a Bayesian framework*" ([link](https://jds2021.sciencesconf.org/){:target="_blank"}, [PDF](https://hal.inria.fr/hal-03264261/document){:target="_blank"})
 
 <p>&nbsp;</p>
