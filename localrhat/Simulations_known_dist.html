@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Khalil Leachouri, Théo Moins, Julyan Arbel, Stéphane Girard, Anne Dutfoy" />
+
+
+<title>Improving MCMC convergence diagnostic with a local version of R-hat: Known distributions on the chains</title>
+
+<script src="Simulations_known_dist_files/header-attrs-2.11/header-attrs.js"></script>
+<script src="Simulations_known_dist_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Simulations_known_dist_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Simulations_known_dist_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Simulations_known_dist_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Simulations_known_dist_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="Simulations_known_dist_files/navigation-1.1/tabsets.js"></script>
+<link href="Simulations_known_dist_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Simulations_known_dist_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Improving MCMC convergence diagnostic with a local version of R-hat: Known distributions on the chains</h1>
+<h4 class="author">Khalil Leachouri, Théo Moins, Julyan Arbel, Stéphane Girard, Anne Dutfoy</h4>
+<h4 class="date">6/18/2021</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#known-distributions-on-the-chains">Known distributions on the chains</a>
+<ul>
+<li><a href="#example-2.a-uniform-distribution">Example 2.a: Uniform distribution</a></li>
+<li><a href="#example-2.b-pareto-distribution">Example 2.b: Pareto distribution</a></li>
+<li><a href="#counter-examples-for-rank-hatr">Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></a>
+<ul>
+<li><a href="#example-2.c-uniform-and-laplace-distributions">Example 2.c: Uniform and Laplace distributions</a></li>
+<li><a href="#example-2.d-uniform-and-normal-distributions">Example 2.d: Uniform and Normal distributions</a></li>
+<li><a href="#example-2.e-uniform-and-exponential-distributions">Example 2.e: Uniform and Exponential distributions</a></li>
+</ul></li>
+<li><a href="#chains-with-the-same-distributions">Chains with the same distributions</a></li>
+</ul></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(&quot;EnvStats&quot;)
+library(&#39;jmuOutlier&#39;)
+library(&quot;ggplot2&quot;)
+library(&quot;rstan&quot;)
+
+devtools::load_all()
+
+source(paste(r_folder, &quot;import/monitornew.R&quot;, sep=&quot;&quot;))
+source(paste(r_folder, &quot;import/r_star_monitor.R&quot;, sep=&quot;&quot;))
+
+N &lt;- 500
+reps &lt;- 500</code></pre>
+<p><span class="math display">\[\begin{equation}
+    \label{eq:R_theorique}
+    R(x) = \sqrt{\frac{W(x)+B(x)}{W(x)}} = \sqrt{1 + \frac{\sum_{j=1}^m\sum_{k=j+1}^m \left(F_j(x)-F_k(x)\right)^2}{m\sum_{j=1}^m F_j(x)(1-F_j(x))}}.
+\end{equation}\]</span></p>
+<div id="known-distributions-on-the-chains" class="section level1">
+<h1>Known distributions on the chains</h1>
+<div id="example-2.a-uniform-distribution" class="section level3">
+<h3>Example 2.a: Uniform distribution</h3>
+<p>As a first example we consider <span class="math inline">\(m\)</span> chains following centered uniform distributions, with the last having a different support than the other: <span class="math display">\[\begin{align*}
+  F_1(x) &amp;= \cdots = F_{m-1}(x) =  \frac{x}{2\sigma} + \frac{1}{2}, \quad \forall x \in \left[-\sigma; \sigma\right],\\
+  \text{and}\quad F_m(x) &amp;=  \frac{x}{2\sigma_m} + \frac{1}{2}, \quad \forall x \in \left[-\sigma_m; \sigma_m\right].
+\end{align*}\]</span></p>
+<p>In such a case the expression of <span class="math inline">\(R(x)\)</span> is explicit and can be compared to the estimator <span class="math inline">\(\hat{R}(x)\)</span>: to illustrate we choose <span class="math inline">\(m=4\)</span> chains, <span class="math inline">\(\sigma = 3/4\)</span> and <span class="math inline">\(\sigma_m = 1\)</span>.</p>
+<pre class="r"><code>sigma &lt;- 3/4
+sigmaM &lt;- 1
+M &lt;- 4
+
+uniform_dists &lt;- c(rep(c((function(q) punif(q, -sigma, sigma))), M-1),
+                   (function(q) punif(q, -sigmaM, sigmaM)))
+
+theoretical_r_values &lt;- r_dist_values(npoints = N, xlim = c(-sigmaM, sigmaM),
+                                      dists = uniform_dists)
+
+uniform_rdists &lt;- c((function(n) runif(n, -sigma, sigma)),
+                    (function(n) runif(n, -sigmaM, sigmaM)))
+
+chaines = gen_chains(M, N, uniform_rdists)
+simulated_rhat = all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
+
+plot_local_r(chaines, simulated_rhat, theoretical_r_values, col=c(colors[3], colors[2]),
+             xlabels = xlabels, plot_legend = FALSE,
+             xlim = c(-1,1), ylim=c(1,1.09), title =&quot;Uniform distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/uniform_r_x-1.png" width="1152" /></p>
+<p>We can see that <span class="math inline">\(\hat{R}(x)\)</span> (in violet) slightly overestimate <span class="math inline">\(R(x)\)</span>, which makes it more conservative than the population value.</p>
+<p>We replicate the experiment 500 times and study the histogram of replications of different versions of <span class="math inline">\(\hat{R}\)</span>:</p>
+<pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;,
+             &quot;Rank-R-hat&quot;,
+             &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)), 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps)
+
+xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
+
+plot_hist(R_matrix_unif, colors = r_colors, xlabels = xlabels,
+          bin_size = 0.0033, lim_y_axis = reps)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/uniform_hist-1.png" width="1152" /></p>
+<p>As constructed initially by Vehtari et al. (2021), this example fool the original <span class="math inline">\(\hat{R}\)</span>. The rank version and <span class="math inline">\(\hat{R}_\infty\)</span> is on the contrary robust in this case.</p>
+</div>
+<div id="example-2.b-pareto-distribution" class="section level3">
+<h3>Example 2.b: Pareto distribution</h3>
+<p>Similarly, we check the second counter-example that fool the original <span class="math inline">\(\hat{R}\)</span>: chains with heavy-tails and different locations. To do so we consider Pareto distributions on the chains: <span class="math display">\[\begin{align*}
+    F_1(x) &amp;= \cdots = F_{m-1}(x) = 1 - \left({x}/{\eta}\right)^{-\alpha},
+    \quad \forall x \in [\eta, +\infty),\\
+    \text{and}\quad F_m(x) &amp;=  1 - \left({x}/{\eta_m}\right)^{-\alpha},
+    \quad \forall x \in [\eta_m, +\infty).
+\end{align*}\]</span></p>
+<p>As an example, we choose <span class="math inline">\(\alpha = 0.8 \leq 1\)</span> to ensure infinite moments and <span class="math inline">\((\eta, \eta_m) = (1, 1.5)\)</span>:</p>
+<pre class="r"><code>eta &lt;- 1
+etaM &lt;- 1.5
+alpha &lt;- 0.8
+M &lt;- 4
+
+pareto_dists &lt;- c(rep(c((function(q) ppareto(q, location = eta, shape = alpha))), M-1),
+                  (function(q) ppareto(q, location = etaM, shape = alpha)))
+
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-eta, eta*8), 
+                                      dists = pareto_dists)
+
+pareto_rdists &lt;- c((function(n) rpareto(n, location = eta, shape = alpha)),
+                   (function(n) rpareto(n, location = etaM, shape = alpha)))
+
+xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
+chaines &lt;- gen_chains(M, N, pareto_rdists)
+simulated_rhat &lt;- all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+plot_local_r(chaines, simulated_rhat, theoretical_r_values,
+             plot_legend = FALSE, col=c(colors[3], colors[2]),
+             xlabels = xlabels, xlim = c(1,8), ylim=c(1,1.09), title =&quot;Pareto distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/pareto_r_x-1.png" width="1152" /></p>
+<p>The same observations as for the previous example can be done here: <span class="math inline">\(\hat{R}_\infty\)</span> overestimates <span class="math inline">\(R_\infty\)</span>, whose value already allowed the diagnosis of a convergence issue. We can verify the behaviour on replications:</p>
+<pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_pareto &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)), 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps)
+
+xlabels = c(1, 1.02, 1.04, 1.06, 1.08)
+plot_hist(R_matrix_pareto, colors = r_colors, xlabels = xlabels,
+          plot_legend = FALSE, bin_size = 0.003, lim_y_axis = 500)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/pareto_hists-1.png" width="1152" /></p>
+</div>
+<div id="counter-examples-for-rank-hatr" class="section level2">
+<h2>Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></h2>
+<p>In this part, We will see 3 cases where rank-<span class="math inline">\(\hat{R}\)</span> doesn’t manage to detect the convergence issue. These cases correspond to chains with different type of distributions, but with same mean and mean over the median.</p>
+<div id="example-2.c-uniform-and-laplace-distributions" class="section level3">
+<h3>Example 2.c: Uniform and Laplace distributions</h3>
+<p>We start by an example where the population version can be computed explicitly: if one chain is uniformly distributed <span class="math inline">\(\mathcal{U}(-2\sigma, 2\sigma)\)</span> and another one from a Laplace distribution <span class="math inline">\(\mathcal{L}(0, \sigma)\)</span>, where <span class="math inline">\(\sigma&gt;0\)</span>, then calculations leads to <span class="math inline">\(R_\infty \approx 1.018\)</span>, which means convergence issue.</p>
+<pre class="r"><code>sigma &lt;- 1/4
+M &lt;- 2
+
+
+dists &lt;- c((function(q) punif(q, -2*sigma, 2*sigma)),
+           (function(q) plaplace(q, mean = 0, sd = sqrt(2)*sigma)))
+
+
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-1.5, 1.5), 
+                                      dists = dists)
+
+
+rdists &lt;- c((function(n) runif(n, -2*sigma, 2*sigma)),
+            (function(n) rlaplace(n, mean = 0, sd = sqrt(2)*sigma)))
+
+
+chaines &lt;- gen_chains(M, N, rdists)
+simulated_rhat &lt;- all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+xlabels &lt;- c(1, 1.01, 1.02, 1.03, 1.04, 1.05)
+
+plot_local_r(chaines, simulated_rhat, theoretical_r_values, threshold = 1.01,
+             xlabels = xlabels, col = c(colors[3], colors[2]),
+             xlim = c(-1.5,1.5), ylim=c(0.999,1.06), title =&quot;Laplace/Uniform distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/laplace_uniform_x-1.png" width="1152" /></p>
+<p>Replications show that rank-<span class="math inline">\(\hat{R}\)</span> is fooled in the same way as <span class="math inline">\(\hat{R}\)</span> in this example:</p>
+<pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_lapl_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)), 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps)
+
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04, 1.05)
+
+plot_hist(R_matrix_lapl_unif, colors = r_colors, bin_size = 0.002,
+          xlabels = xlabels, plot_legend = TRUE, threshold = 1.01,
+          lim_y_axis = reps, vaxis_pos = 0.998)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/laplace_uniform_hists-1.png" width="1152" /></p>
+</div>
+<div id="example-2.d-uniform-and-normal-distributions" class="section level3">
+<h3>Example 2.d: Uniform and Normal distributions</h3>
+<p>Similarly, others distributions are possible to build counter-examples. Consider <span class="math inline">\(m-1\)</span> normal chains <span class="math inline">\(\mathcal{N}\left(0, \frac{\pi}{2}\sigma^2\right)\)</span> and for the last one a uniform <span class="math inline">\(\mathcal{U}(-2\sigma, 2\sigma)\)</span>:</p>
+<pre class="r"><code>sigma &lt;- 1/2
+M &lt;- 2
+
+dists &lt;- c((function(q) pnorm(q, mean = 0, sd = sqrt(0.5*pi)*sigma)),
+           (function(q) punif(q, -2*sigma, 2*sigma)))
+
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-2, 2), 
+                                      dists = dists)
+
+rdists &lt;- c((function(n) rnorm(n, mean = 0, sd = sqrt(0.5*pi)*sigma)),
+            (function(n) runif(n, -2*sigma, 2*sigma)))
+
+chaines &lt;- gen_chains(M, 2*N, rdists)
+simulated_rhat &lt;- all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+xlabels &lt;- c(1, 1.005, 1.01, 1.015, 1.02)
+
+plot_local_r(chaines, simulated_rhat, theoretical_r_values, 
+             xlabels = xlabels, col=c(colors[3], colors[2]), threshold = 1.01,
+             xlim = c(-2,2), ylim=c(0.999,1.025), title =&quot;Gaussian/Uniform distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/gaussian_uniform_x-1.png" width="1152" /></p>
+<p>Replications confirms that this construction are fooling the different versions of <span class="math inline">\(\hat{R}\)</span> except <span class="math inline">\(\hat{R}_\infty\)</span>.</p>
+<pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_norm_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)), 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps)
+
+xlabels = c(1, 1.01, 1.02, 1.03)
+plot_hist(R_matrix_norm_unif, colors = r_colors, xlabels = xlabels,
+          bin_size = 0.002, plot_legend = TRUE, threshold = 1.01,
+          lim_y_axis = reps, vaxis_pos = 0.999)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/gaussian_uniform_hists-1.png" width="1152" /></p>
+</div>
+<div id="example-2.e-uniform-and-exponential-distributions" class="section level3">
+<h3>Example 2.e: Uniform and Exponential distributions</h3>
+<p>Finally, it is also possible to mix uniform distributions with exponential:</p>
+<pre class="r"><code>M &lt;- 4
+
+min_unif &lt;- 1-2*log(2)
+max_unif &lt;- 1+2*log(2)
+
+
+dists &lt;- c(rep(c((function(q) pexp(q))), M-1),
+           (function(q) punif(q, min_unif, max_unif)))
+
+theoretical_r_values &lt;- r_dist_values(npoints = 500, xlim = c(-1, 6), 
+                                      dists = dists)
+
+rdists &lt;- c((function(n) rexp(n)),
+            (function(n) runif(n, min_unif, max_unif)))
+
+chaines &lt;- gen_chains(M, N, rdists)
+simulated_rhat &lt;- all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
+plot_local_r(chaines, simulated_rhat, theoretical_r_values,
+             xlabels = xlabels, col = c(colors[3], colors[2]),
+             xlim = c(-1, 6), ylim=c(1,1.11), title =&quot;Exponential/Uniform distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/exp_uniform_x-1.png" width="1152" /></p>
+<pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_exp_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)), 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps)
+
+plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.005, 
+          lim_y_axis = 500, vaxis_pos = 0.998)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/exp_uniform_hists-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="chains-with-the-same-distributions" class="section level2">
+<h2>Chains with the same distributions</h2>
+<p>In this part we focus on the case where all the distributions are the same, to verify the behavior in the null hypothesis.</p>
+<p>We start by looking at 4 chains uniformly distributed:</p>
+<pre class="r"><code>sup_unif &lt;- 0.5
+M &lt;- 2
+
+uniform_dists &lt;- c(rep(c((function(q) punif(q, -sup_unif, sup_unif))), M))
+
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-sup_unif, sup_unif), 
+                                      dists = uniform_dists)
+
+uniform_rdists &lt;- c((function(n) runif(n, -sup_unif, sup_unif)),
+                    (function(n) runif(n, -sup_unif, sup_unif)))
+
+chaines = gen_chains(M, N, uniform_rdists)
+simulated_rhat = all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+plot_local_r(chaines, simulated_rhat, theoretical_r_values,
+             col = c(colors[3], colors[2]),
+             xlim = c(-0.6, 0.6), ylim=c(0.99,1.01), title =&quot;Uniform distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/same_uniform_x-1.png" width="1152" /></p>
+<p>We can do the same analysis for pareto :</p>
+<pre class="r"><code>eta &lt;- 1
+alpha &lt;- 0.8
+M &lt;- 2
+N &lt;- 500
+
+pareto_dists &lt;- c(rep(c((function(q) ppareto(q, location = eta, shape = alpha))), M))
+
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(eta, eta*8), 
+                                      dists = pareto_dists)
+
+pareto_rdists &lt;- c((function(n) rpareto(n, location = eta, shape = alpha)),
+                   (function(n) rpareto(n, location = eta, shape = alpha)))
+
+chaines = gen_chains(M, N, pareto_rdists)
+simulated_rhat = all_local_rhat(chaines, max_nb_points = &quot;ALL&quot;)
+
+plot_local_r(chaines, simulated_rhat, theoretical_r_values,
+             col = c(colors[3], colors[2]),
+             xlim = c(eta, eta*8), ylim=c(0.99,1.01), title =&quot;Pareto distributions&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/same_pareto_x-1.png" width="1152" /></p>
+<pre class="r"><code>M &lt;- 2
+N &lt;- 500
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(rhat_infinity),
+                                    r_names = c(&quot;R-hat-infinity&quot;),
+                                    reps = reps)
+
+# R_matrix_unif &lt;- N*(M-1)*(R_matrix_same_unif**2 - 1 + 1/N)
+# R_matrix_unif &lt;- N*M*(R_matrix_same_unif**2 - 1)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(rhat_infinity),
+                                   r_names = c(&quot;R-hat-infinity&quot;),
+                                   reps = reps)
+
+# R_matrix_par &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
+# R_matrix_par &lt;- N*M*(R_matrix_same_par**2-1)
+
+dist1 &lt;- sort((R_matrix_same_unif-mean(R_matrix_same_unif)))/sd(R_matrix_same_unif)
+dist2 &lt;- sort((R_matrix_same_par-mean(R_matrix_same_par)))/sd(R_matrix_same_par)
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/qqplot1.pdf&quot;, width = 8, height = 7)
+ggplot(mapping = aes(x = dist1, y = dist2)) + 
+  geom_point() +
+  geom_abline(aes(slope = 1, intercept = 0), linetype = 2) +
+  xlab(&quot;&quot;) + ylab(&quot;Pareto distribution&quot;) + 
+  xlim(-2, 5) + ylim(-2, 5) +
+  theme(axis.text=element_text(size=20), axis.title=element_text(size=24,face=&quot;bold&quot;))</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/unnamed-chunk-8-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code>M &lt;- 4
+N &lt;- 500
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(rhat_infinity),
+                                    r_names = c(&quot;R-hat-infinity&quot;),
+                                    reps = reps)
+
+# R_matrix_unif &lt;- N*(M-1)*(R_matrix_same_unif**2 - 1 + 1/N)
+# R_matrix_unif &lt;- N*M*(R_matrix_same_unif**2 - 1)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(rhat_infinity),
+                                   r_names = c(&quot;R-hat-infinity&quot;),
+                                   reps = reps)
+
+# R_matrix_par &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
+# R_matrix_par &lt;- N*M*(R_matrix_same_par**2-1)
+
+dist1 &lt;- sort((R_matrix_same_unif-mean(R_matrix_same_unif))/sd(R_matrix_same_unif))
+dist2 &lt;- sort((R_matrix_same_par-mean(R_matrix_same_par))/sd(R_matrix_same_par))
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/qqplot2.pdf&quot;, width = 8, height = 7)
+ggplot(mapping = aes(x = dist1, y = dist2)) + 
+  geom_point() +
+  geom_abline(aes(slope = 1, intercept = 0), linetype = 2) +
+  xlab(&quot;Uniform distribution&quot;) + ylab(&quot;&quot;) +
+  xlim(-2, 5) + ylim(-2, 5) +
+  theme(axis.text=element_text(size=20), axis.title=element_text(size=24,face=&quot;bold&quot;))</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/qqplot2-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code>M &lt;- 8
+N &lt;- 500
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(rhat_infinity),
+                                    r_names = c(&quot;R-hat-infinity&quot;),
+                                    reps = reps)
+
+# R_matrix_unif &lt;- N*(M-1)*(R_matrix_same_unif**2 - 1 + 1/N)
+# R_matrix_unif &lt;- N*M*(R_matrix_same_unif**2 - 1)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(rhat_infinity),
+                                   r_names = c(&quot;R-hat-infinity&quot;),
+                                   reps = reps)
+
+# R_matrix_par &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
+# R_matrix_par &lt;- N*M*(R_matrix_same_par**2-1)
+
+dist1 &lt;- sort((R_matrix_same_unif-mean(R_matrix_same_unif))/sd(R_matrix_same_unif))
+dist2 &lt;- sort((R_matrix_same_par-mean(R_matrix_same_par))/sd(R_matrix_same_par))
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/qqplot3.pdf&quot;, width = 8, height = 7)
+ggplot(mapping = aes(x = dist1, y = dist2)) + 
+  geom_point() +
+  geom_abline(aes(slope = 1, intercept = 0), linetype = 2) +
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) + 
+  xlim(-2, 5) + ylim(-2, 5) +
+  theme(axis.text=element_text(size=20), axis.title=element_text(size=24,face=&quot;bold&quot;))</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/qqplot3-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code>M &lt;- 2
+N &lt;- 200
+
+r_functions &lt;- c(rhat_infinity)
+r_names &lt;- c(&quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[3])
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)), 
+                                    r_func = r_functions, 
+                                    r_names = r_names, 
+                                    reps = reps)
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/same_unif_1.pdf&quot;, width = 8, height = 7)
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_hist(R_matrix_same_unif, colors = r_colors, plot_threshold = T,
+          threshold = 1.01, xlabels = xlabels, bin_size = 0.0020, 
+          lim_y_axis = 200, vaxis_pos = 1, plot_legend = F)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/same_uniform_hists1-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code>M &lt;- 4
+N &lt;- 100
+
+r_functions &lt;- c(rhat_infinity)
+r_names &lt;- c(&quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[3])
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)), 
+                                    r_func = r_functions, 
+                                    r_names = r_names, 
+                                    reps = reps)
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/same_unif_2.pdf&quot;, width = 8, height = 7)
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_hist(R_matrix_same_unif, colors = r_colors, plot_threshold = F,
+          xlabels = xlabels, bin_size = 0.002, 
+          lim_y_axis = 200, vaxis_pos = 1, plot_legend = F)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/same_uniform_hists2-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code>M &lt;- 8
+N &lt;- 50
+
+r_functions &lt;- c(rhat_infinity)
+r_names &lt;- c(&quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[3])
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)), 
+                                    r_func = r_functions, 
+                                    r_names = r_names, 
+                                    reps = reps)
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/same_unif_3.pdf&quot;, width = 8, height = 7)
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_hist(R_matrix_same_unif, colors = r_colors, plot_threshold = F,
+          threshold = 1.03, xlabels = xlabels, bin_size = 0.002, 
+          lim_y_axis = 200, vaxis_pos = 1)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code>M &lt;- 2
+N &lt;- 500
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(trad_rhat),
+                                    r_names = c(&quot;R-hat&quot;),
+                                    reps = reps)
+
+# R_matrix_unif &lt;- N*(M-1)*(R_matrix_same_unif**2 - 1 + 1/N)
+# R_matrix_unif &lt;- N*M*(R_matrix_same_unif**2 - 1)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(trad_rhat),
+                                   r_names = c(&quot;R-hat&quot;),
+                                   reps = reps)
+
+# R_matrix_par &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
+# R_matrix_par &lt;- N*M*(R_matrix_same_par**2-1)
+
+dist1 &lt;- sort((R_matrix_same_unif-mean(R_matrix_same_unif)))/sd(R_matrix_same_unif)
+dist2 &lt;- sort((R_matrix_same_par-mean(R_matrix_same_par)))/sd(R_matrix_same_par)
+
+# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/qqplot1.pdf&quot;, width = 8, height = 7)
+ggplot(mapping = aes(x = dist1, y = dist2)) + 
+  geom_point() +
+  geom_abline(aes(slope = 1, intercept = 0), linetype = 2) +
+  xlab(&quot;&quot;) + ylab(&quot;Pareto distribution&quot;) + 
+  xlim(-2, 5) + ylim(-2, 5) +
+  theme(axis.text=element_text(size=20), axis.title=element_text(size=24,face=&quot;bold&quot;))</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/qqplot1-1.png" width="1152" /></p>
+<pre class="r"><code># dev.off()</code></pre>
+<pre class="r"><code># 
+# M &lt;- 4
+# N &lt;- 500
+# 
+# R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+#                                      r_func = c((function(chains) local_rhat(2, chains))),
+#                                      r_names = c(&quot;R-hat-infinity&quot;),
+#                                      reps = reps)
+# 
+# R_matrix &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
+# bin_size &lt;- 1
+# lim_y_axis &lt;- 0.5
+# 
+# 
+# plot_hist_chi_square &lt;- function(){
+#   par(mar=c(4,5.5,2,2))
+# 
+#   xlim &lt;- c(min(R_matrix), max(R_matrix))
+# 
+#   means = round(seq(from = min(R_matrix), to = max(R_matrix), length.out = 6), digits = 2)
+# 
+#   h &lt;- ceiling((max(R_matrix[,1])-min(R_matrix[,1])) / bin_size)+1
+# 
+#   b &lt;- seq(min(R_matrix[,1]),  max(R_matrix[,1]), length.out = h)
+# 
+#   hist(R_matrix[,1], col = colors[3], breaks = b,
+#        xlim=xlim, ylim = c(0,lim_y_axis), add=FALSE,
+#        xlab=&quot;&quot;, yaxt=&quot;n&quot;, xaxt=&quot;n&quot;, ylab=&quot;&quot;, main=&quot;&quot;, prob=TRUE)
+#   means &lt;- c(means, round(mean(R_matrix[,1]), digits=2))
+# 
+#   axis(2, cex.axis = 2, las=1, pos = 0, lwd = 4)
+#   axis(1, cex.axis = 2, pos=0, padj=0.5, lwd = 4)
+# 
+#   xfit&lt;-seq(0,max(R_matrix[,1]),length=100)
+#   yfit&lt;-dchisq(xfit, df= M-1)
+#   lines(xfit, yfit, col=colors[1], lwd=5)
+# }
+# 
+# # mean(R_matrix[,1])
+# plot_hist_chi_square()</code></pre>
+<pre class="r"><code># reps &lt;- 50
+# 
+# R_matrix_r_star = repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)), 
+#                          r_func = c(r_star_gbm), 
+#                          r_names = c(&quot;R-star&quot;), 
+#                          reps = reps)
+# 
+# plot_hist(R_matrix_r_star, colors = colors[4], bin_size = 0.08, 
+#           lim_y_axis = 30, vaxis_pos = 0.78)</code></pre>
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<pre class="r"><code>data=data.frame(r_version, r_experiment,  r_values)
+
+ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
+    geom_boxplot() + 
+    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
+               color = &quot;black&quot;, size=0.5) +
+    xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/unnamed-chunk-12-1.png" width="1152" /></p>
+<pre class="r"><code>data2=data.frame(r_version2, r_experiment2,  r_values2)
+
+ggplot(data2, aes(x=r_experiment2, y=r_values2, fill=r_version2)) +
+    geom_boxplot() + 
+    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
+               color = &quot;black&quot;, size=0.5) +
+    xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;)</code></pre>
+<p><img src="Simulations_known_dist_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
