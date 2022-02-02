@@ -172,19 +172,22 @@ pre code {
 
 <div id="TOC">
 <ul>
-<li><a href="#known-distributions-on-the-chains">Known distributions on the chains</a>
+<li><a href="#known-distributions-on-the-chains">1. Known distributions on the chains</a>
 <ul>
-<li><a href="#example-2.a-uniform-distribution">Example 2.a: Uniform distribution</a></li>
-<li><a href="#example-2.b-pareto-distribution">Example 2.b: Pareto distribution</a></li>
-<li><a href="#counter-examples-for-rank-hatr">Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></a>
+<li><a href="#counter-examples-for-hatr">1.1 Counter examples for <span class="math inline">\(\hat{R}\)</span></a>
 <ul>
-<li><a href="#example-2.c-uniform-and-laplace-distributions">Example 2.c: Uniform and Laplace distributions</a></li>
-<li><a href="#example-2.d-uniform-and-normal-distributions">Example 2.d: Uniform and Normal distributions</a></li>
-<li><a href="#example-2.e-uniform-and-exponential-distributions">Example 2.e: Uniform and Exponential distributions</a></li>
+<li><a href="#example-i-uniform-distribution">Example (i): Uniform distribution</a></li>
+<li><a href="#example-ii-pareto-distribution">Example (ii): Pareto distribution</a></li>
 </ul></li>
-<li><a href="#chains-with-the-same-distributions">Chains with the same distributions</a></li>
+<li><a href="#counter-examples-for-rank-hatr">1.2 Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></a>
+<ul>
+<li><a href="#example-iii-uniform-and-laplace-distributions">Example (iii): Uniform and Laplace distributions</a></li>
+<li><a href="#example-iv-uniform-and-normal-distributions">Example (iv): Uniform and Normal distributions</a></li>
+<li><a href="#example-v-uniform-and-exponential-distributions">Example (v): Uniform and Exponential distributions</a></li>
 </ul></li>
-<li><a href="#summary">Summary</a></li>
+<li><a href="#threshold-estimation">1.3 Threshold estimation</a></li>
+<li><a href="#summary">1.4 Summary</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -205,9 +208,11 @@ reps &lt;- 500</code></pre>
     R(x) = \sqrt{\frac{W(x)+B(x)}{W(x)}} = \sqrt{1 + \frac{\sum_{j=1}^m\sum_{k=j+1}^m \left(F_j(x)-F_k(x)\right)^2}{m\sum_{j=1}^m F_j(x)(1-F_j(x))}}.
 \end{equation}\]</span></p>
 <div id="known-distributions-on-the-chains" class="section level1">
-<h1>Known distributions on the chains</h1>
-<div id="example-2.a-uniform-distribution" class="section level3">
-<h3>Example 2.a: Uniform distribution</h3>
+<h1>1. Known distributions on the chains</h1>
+<div id="counter-examples-for-hatr" class="section level2">
+<h2>1.1 Counter examples for <span class="math inline">\(\hat{R}\)</span></h2>
+<div id="example-i-uniform-distribution" class="section level3">
+<h3>Example (i): Uniform distribution</h3>
 <p>As a first example we consider <span class="math inline">\(m\)</span> chains following centered uniform distributions, with the last having a different support than the other: <span class="math display">\[\begin{align*}
   F_1(x) &amp;= \cdots = F_{m-1}(x) =  \frac{x}{2\sigma} + \frac{1}{2}, \quad \forall x \in \left[-\sigma; \sigma\right],\\
   \text{and}\quad F_m(x) &amp;=  \frac{x}{2\sigma_m} + \frac{1}{2}, \quad \forall x \in \left[-\sigma_m; \sigma_m\right].
@@ -255,8 +260,8 @@ plot_hist(R_matrix_unif, colors = r_colors, xlabels = xlabels,
 <p><img src="Simulations_known_dist_files/figure-html/uniform_hist-1.png" width="1152" /></p>
 <p>As constructed initially by Vehtari et al. (2021), this example fool the original <span class="math inline">\(\hat{R}\)</span>. The rank version and <span class="math inline">\(\hat{R}_\infty\)</span> is on the contrary robust in this case.</p>
 </div>
-<div id="example-2.b-pareto-distribution" class="section level3">
-<h3>Example 2.b: Pareto distribution</h3>
+<div id="example-ii-pareto-distribution" class="section level3">
+<h3>Example (ii): Pareto distribution</h3>
 <p>Similarly, we check the second counter-example that fool the original <span class="math inline">\(\hat{R}\)</span>: chains with heavy-tails and different locations. To do so we consider Pareto distributions on the chains: <span class="math display">\[\begin{align*}
     F_1(x) &amp;= \cdots = F_{m-1}(x) = 1 - \left({x}/{\eta}\right)^{-\alpha},
     \quad \forall x \in [\eta, +\infty),\\
@@ -301,11 +306,12 @@ plot_hist(R_matrix_pareto, colors = r_colors, xlabels = xlabels,
           plot_legend = FALSE, bin_size = 0.003, lim_y_axis = 500)</code></pre>
 <p><img src="Simulations_known_dist_files/figure-html/pareto_hists-1.png" width="1152" /></p>
 </div>
+</div>
 <div id="counter-examples-for-rank-hatr" class="section level2">
-<h2>Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></h2>
+<h2>1.2 Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></h2>
 <p>In this part, We will see 3 cases where rank-<span class="math inline">\(\hat{R}\)</span> doesn’t manage to detect the convergence issue. These cases correspond to chains with different type of distributions, but with same mean and mean over the median.</p>
-<div id="example-2.c-uniform-and-laplace-distributions" class="section level3">
-<h3>Example 2.c: Uniform and Laplace distributions</h3>
+<div id="example-iii-uniform-and-laplace-distributions" class="section level3">
+<h3>Example (iii): Uniform and Laplace distributions</h3>
 <p>We start by an example where the population version can be computed explicitly: if one chain is uniformly distributed <span class="math inline">\(\mathcal{U}(-2\sigma, 2\sigma)\)</span> and another one from a Laplace distribution <span class="math inline">\(\mathcal{L}(0, \sigma)\)</span>, where <span class="math inline">\(\sigma&gt;0\)</span>, then calculations leads to <span class="math inline">\(R_\infty \approx 1.018\)</span>, which means convergence issue.</p>
 <pre class="r"><code>sigma &lt;- 1/4
 M &lt;- 2
@@ -349,8 +355,8 @@ plot_hist(R_matrix_lapl_unif, colors = r_colors, bin_size = 0.002,
           lim_y_axis = reps, vaxis_pos = 0.998)</code></pre>
 <p><img src="Simulations_known_dist_files/figure-html/laplace_uniform_hists-1.png" width="1152" /></p>
 </div>
-<div id="example-2.d-uniform-and-normal-distributions" class="section level3">
-<h3>Example 2.d: Uniform and Normal distributions</h3>
+<div id="example-iv-uniform-and-normal-distributions" class="section level3">
+<h3>Example (iv): Uniform and Normal distributions</h3>
 <p>Similarly, others distributions are possible to build counter-examples. Consider <span class="math inline">\(m-1\)</span> normal chains <span class="math inline">\(\mathcal{N}\left(0, \frac{\pi}{2}\sigma^2\right)\)</span> and for the last one a uniform <span class="math inline">\(\mathcal{U}(-2\sigma, 2\sigma)\)</span>:</p>
 <pre class="r"><code>sigma &lt;- 1/2
 M &lt;- 2
@@ -389,8 +395,8 @@ plot_hist(R_matrix_norm_unif, colors = r_colors, xlabels = xlabels,
           lim_y_axis = reps, vaxis_pos = 0.999)</code></pre>
 <p><img src="Simulations_known_dist_files/figure-html/gaussian_uniform_hists-1.png" width="1152" /></p>
 </div>
-<div id="example-2.e-uniform-and-exponential-distributions" class="section level3">
-<h3>Example 2.e: Uniform and Exponential distributions</h3>
+<div id="example-v-uniform-and-exponential-distributions" class="section level3">
+<h3>Example (v): Uniform and Exponential distributions</h3>
 <p>Finally, it is also possible to mix uniform distributions with exponential:</p>
 <pre class="r"><code>M &lt;- 4
 
@@ -429,8 +435,8 @@ plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.005,
 <p><img src="Simulations_known_dist_files/figure-html/exp_uniform_hists-1.png" width="1152" /></p>
 </div>
 </div>
-<div id="chains-with-the-same-distributions" class="section level2">
-<h2>Chains with the same distributions</h2>
+<div id="threshold-estimation" class="section level2">
+<h2>1.3 Threshold estimation</h2>
 <p>In this part we focus on the case where all the distributions are the same, to verify the behavior in the null hypothesis.</p>
 <p>We start by looking at 4 chains uniformly distributed:</p>
 <pre class="r"><code>sup_unif &lt;- 0.5
@@ -622,90 +628,48 @@ plot_hist(R_matrix_same_unif, colors = r_colors, plot_threshold = F,
           lim_y_axis = 200, vaxis_pos = 1)</code></pre>
 <p><img src="Simulations_known_dist_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
 <pre class="r"><code># dev.off()</code></pre>
-<pre class="r"><code>M &lt;- 2
-N &lt;- 500
+<pre class="r"><code>get_r_lim_infinity &lt;- function(M, N, alpha, 
+                               reps = 500, N_estimation = 500){
+  
+  R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N_estimation, uniform_rdists)),
+                                      r_func = c(rhat_infinity),
+                                      r_names = c(&quot;R-hat-infinity&quot;),
+                                      reps = reps)
+  q &lt;- quantile(N_estimation*M*(R_matrix_same_unif**2 - 1), 
+                                 probs = c(1-alpha))
+  return (sqrt(1+ q/(N*M)))
+}
 
-R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
-                                    r_func = c(trad_rhat),
-                                    r_names = c(&quot;R-hat&quot;),
-                                    reps = reps)
+get_alpha_infinity &lt;- function(M, N, rlim, reps = 500,
+                               N_estimation = 500){
+  
+  R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N_estimation, uniform_rdists)),
+                                      r_func = c(rhat_infinity),
+                                      r_names = c(&quot;R-hat-infinity&quot;),
+                                      reps = reps)
+  empirical_dist &lt;- ecdf(N_estimation*M*(R_matrix_same_unif**2 - 1))
+  return (empirical_dist(N*M*(rlim**2-1)))
+}
 
-# R_matrix_unif &lt;- N*(M-1)*(R_matrix_same_unif**2 - 1 + 1/N)
-# R_matrix_unif &lt;- N*M*(R_matrix_same_unif**2 - 1)
-
-R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
-                                   r_func = c(trad_rhat),
-                                   r_names = c(&quot;R-hat&quot;),
-                                   reps = reps)
-
-# R_matrix_par &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
-# R_matrix_par &lt;- N*M*(R_matrix_same_par**2-1)
-
-dist1 &lt;- sort((R_matrix_same_unif-mean(R_matrix_same_unif)))/sd(R_matrix_same_unif)
-dist2 &lt;- sort((R_matrix_same_par-mean(R_matrix_same_par)))/sd(R_matrix_same_par)
-
-# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/qqplot1.pdf&quot;, width = 8, height = 7)
-ggplot(mapping = aes(x = dist1, y = dist2)) + 
-  geom_point() +
-  geom_abline(aes(slope = 1, intercept = 0), linetype = 2) +
-  xlab(&quot;&quot;) + ylab(&quot;Pareto distribution&quot;) + 
-  xlim(-2, 5) + ylim(-2, 5) +
-  theme(axis.text=element_text(size=20), axis.title=element_text(size=24,face=&quot;bold&quot;))</code></pre>
-<p><img src="Simulations_known_dist_files/figure-html/qqplot1-1.png" width="1152" /></p>
-<pre class="r"><code># dev.off()</code></pre>
-<pre class="r"><code># 
-# M &lt;- 4
-# N &lt;- 500
-# 
-# R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
-#                                      r_func = c((function(chains) local_rhat(2, chains))),
-#                                      r_names = c(&quot;R-hat-infinity&quot;),
-#                                      reps = reps)
-# 
-# R_matrix &lt;- N*(M-1)*(R_matrix_same_par**2-1 +1/N)
-# bin_size &lt;- 1
-# lim_y_axis &lt;- 0.5
-# 
-# 
-# plot_hist_chi_square &lt;- function(){
-#   par(mar=c(4,5.5,2,2))
-# 
-#   xlim &lt;- c(min(R_matrix), max(R_matrix))
-# 
-#   means = round(seq(from = min(R_matrix), to = max(R_matrix), length.out = 6), digits = 2)
-# 
-#   h &lt;- ceiling((max(R_matrix[,1])-min(R_matrix[,1])) / bin_size)+1
-# 
-#   b &lt;- seq(min(R_matrix[,1]),  max(R_matrix[,1]), length.out = h)
-# 
-#   hist(R_matrix[,1], col = colors[3], breaks = b,
-#        xlim=xlim, ylim = c(0,lim_y_axis), add=FALSE,
-#        xlab=&quot;&quot;, yaxt=&quot;n&quot;, xaxt=&quot;n&quot;, ylab=&quot;&quot;, main=&quot;&quot;, prob=TRUE)
-#   means &lt;- c(means, round(mean(R_matrix[,1]), digits=2))
-# 
-#   axis(2, cex.axis = 2, las=1, pos = 0, lwd = 4)
-#   axis(1, cex.axis = 2, pos=0, padj=0.5, lwd = 4)
-# 
-#   xfit&lt;-seq(0,max(R_matrix[,1]),length=100)
-#   yfit&lt;-dchisq(xfit, df= M-1)
-#   lines(xfit, yfit, col=colors[1], lwd=5)
-# }
-# 
-# # mean(R_matrix[,1])
-# plot_hist_chi_square()</code></pre>
-<pre class="r"><code># reps &lt;- 50
-# 
-# R_matrix_r_star = repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)), 
-#                          r_func = c(r_star_gbm), 
-#                          r_names = c(&quot;R-star&quot;), 
-#                          reps = reps)
-# 
-# plot_hist(R_matrix_r_star, colors = colors[4], bin_size = 0.08, 
-#           lim_y_axis = 30, vaxis_pos = 0.78)</code></pre>
+m_range &lt;- c(2, 4, 8) #, 10, 15)
+alpha_range &lt;- c(0.001, 0.005, 0.01, 0.05, 0.1)
+r_lim_tab &lt;- c()
+for (m in m_range){
+  r_row &lt;- c(m)
+  for (alpha in alpha_range){
+    r_row &lt;- c(r_row, get_r_lim_infinity(M = m, N = 400/m, alpha = alpha))
+  }
+  r_lim_tab &lt;- rbind(r_lim_tab, r_row)
+}
+colnames(r_lim_tab) &lt;- c(&quot;m&quot;, alpha_range)
+r_lim_tab</code></pre>
+<pre><code>      m    0.001    0.005     0.01     0.05      0.1
+r_row 2 1.017687 1.018288 1.015149 1.012293 1.010550
+r_row 4 1.029966 1.028381 1.024239 1.018648 1.017346
+r_row 8 1.040505 1.038556 1.035629 1.029777 1.027812</code></pre>
 </div>
-</div>
-<div id="summary" class="section level1">
-<h1>Summary</h1>
+<div id="summary" class="section level2">
+<h2>1.4 Summary</h2>
 <pre class="r"><code>data=data.frame(r_version, r_experiment,  r_values)
 
 ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
@@ -713,15 +677,8 @@ ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
     geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
                color = &quot;black&quot;, size=0.5) +
     xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;)</code></pre>
-<p><img src="Simulations_known_dist_files/figure-html/unnamed-chunk-12-1.png" width="1152" /></p>
-<pre class="r"><code>data2=data.frame(r_version2, r_experiment2,  r_values2)
-
-ggplot(data2, aes(x=r_experiment2, y=r_values2, fill=r_version2)) +
-    geom_boxplot() + 
-    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
-               color = &quot;black&quot;, size=0.5) +
-    xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;)</code></pre>
-<p><img src="Simulations_known_dist_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
+<p><img src="Simulations_known_dist_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
+</div>
 </div>
 
 
