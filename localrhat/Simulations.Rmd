@@ -1,5 +1,5 @@
 ---
-title: "On the use of a local ˆR to improve MCMC convergence diagnostic"
+title: "On the use of a local R-hat to improve MCMC convergence diagnostic"
 author: "Théo Moins, Julyan Arbel, Stéphane Girard, Anne Dutfoy"
 date: "5/2/2022"
 output: 
@@ -927,7 +927,7 @@ writeLines(readLines(paste(stan_folder, "logit_reg.stan", sep="")))
 
 We run Stan using the dataset \texttt{logit} available in the package \texttt{mcmc}.
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, override = FALSE}
 data("logit")
 d <- 4
 logit_data<- read_rdump(paste(stan_folder, "logit_reg.data.R", sep=""))

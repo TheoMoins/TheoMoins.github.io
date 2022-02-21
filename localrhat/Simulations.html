@@ -12,15 +12,15 @@
 <meta name="author" content="Théo Moins, Julyan Arbel, Stéphane Girard, Anne Dutfoy" />
 
 
-<title>On the use of local ˆR to improve MCMC convergence diagnostic</title>
+<title>On the use of a local R-hat to improve MCMC convergence diagnostic</title>
 
-<script src="Simultations_files/header-attrs-2.11/header-attrs.js"></script>
-<script src="Simultations_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="Simulations_files/header-attrs-2.11/header-attrs.js"></script>
+<script src="Simulations_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="Simultations_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
-<script src="Simultations_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="Simultations_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="Simultations_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<link href="Simulations_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Simulations_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Simulations_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Simulations_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 <style>h1 {font-size: 34px;}
        h1.title {font-size: 38px;}
        h2 {font-size: 30px;}
@@ -30,12 +30,12 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="Simultations_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="Simultations_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="Simultations_files/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="Simultations_files/navigation-1.1/tabsets.js"></script>
-<link href="Simultations_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="Simultations_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="Simulations_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="Simulations_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="Simulations_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="Simulations_files/navigation-1.1/tabsets.js"></script>
+<link href="Simulations_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Simulations_files/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -240,7 +240,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">On the use of local ˆR to improve MCMC convergence diagnostic</h1>
+<h1 class="title toc-ignore">On the use of a local R-hat to improve MCMC convergence diagnostic</h1>
 <h4 class="author">Théo Moins, Julyan Arbel, Stéphane Girard, Anne Dutfoy</h4>
 <h4 class="date">5/2/2022</h4>
 
@@ -291,17 +291,17 @@ chains = gen_chains(M, N, uniform_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0476
+Local R-hat obtained:  1.0617
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.047596</code></pre>
+<pre><code>[1] 1.061693</code></pre>
 <pre class="r"><code>simulated_rhat = all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
 plot_local_r(chains, simulated_rhat, theoretical_r_values, col=c(colors[3], colors[2]),
              xlabels = xlabels, plot_legend = FALSE,
              xlim = c(-1,1), ylim=c(1,1.09), title =&quot;&quot;)</code></pre>
-<p><img src="Simultations_files/figure-html/uniform_r_x2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/uniform_r_x2-1.png" width="1152" /></p>
 <p>We can see that <span class="math inline">\(\hat{R}(x)\)</span> (in violet) slightly overestimate <span class="math inline">\(R(x)\)</span>, which makes it more conservative than the population value.</p>
 <p>We replicate the experiment 500 times and study the histogram of replications of different versions of <span class="math inline">\(\hat{R}\)</span>:</p>
 <pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
@@ -319,7 +319,7 @@ xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
 
 plot_hist(R_matrix_unif, colors = r_colors, xlabels = xlabels,
           bin_size = 0.005, lim_y_axis = reps, plot_legend = F)</code></pre>
-<p><img src="Simultations_files/figure-html/uniform_hist-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/uniform_hist-1.png" width="1152" /></p>
 <p>As constructed initially by Vehtari et al. (2021), this example fool the original <span class="math inline">\(\hat{R}\)</span>. The rank version and <span class="math inline">\(\hat{R}_\infty\)</span> is on the contrary robust in this case.</p>
 </div>
 <div id="example-ii-pareto-distribution" class="section level3" number="1.1.2">
@@ -350,16 +350,16 @@ chains &lt;- gen_chains(M, N, pareto_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0498
+Local R-hat obtained:  1.0513
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.049801</code></pre>
+<pre><code>[1] 1.051317</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 plot_local_r(chains, simulated_rhat, theoretical_r_values,
              plot_legend = FALSE, col=c(colors[3], colors[2]),
              xlabels = xlabels, xlim = c(1,8), ylim=c(1,1.09), title =&quot;&quot;)</code></pre>
-<p><img src="Simultations_files/figure-html/pareto_r_x2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/pareto_r_x2-1.png" width="1152" /></p>
 <p>The same observations as for the previous example can be done here: <span class="math inline">\(\hat{R}_\infty\)</span> overestimates <span class="math inline">\(R_\infty\)</span>, whose value already allowed the diagnosis of a convergence issue. We can verify the behaviour on replications:</p>
 <pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
@@ -373,7 +373,7 @@ R_matrix_pareto &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, p
 xlabels = c(1, 1.02, 1.04, 1.06, 1.08)
 plot_hist(R_matrix_pareto, colors = r_colors, xlabels = xlabels,
           plot_legend = FALSE, bin_size = 0.005, lim_y_axis = 500)</code></pre>
-<p><img src="Simultations_files/figure-html/pareto_hists-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/pareto_hists-1.png" width="1152" /></p>
 </div>
 </div>
 <div id="counter-examples-for-rank-hatr" class="section level2" number="1.2">
@@ -402,10 +402,10 @@ chains &lt;- gen_chains(M, N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0244
-p-value:  0.001
+Local R-hat obtained:  1.0172
+p-value:  0.00700000000000001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.024427</code></pre>
+<pre><code>[1] 1.017231</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.01, 1.02, 1.03)
@@ -413,7 +413,7 @@ xlabels &lt;- c(1, 1.01, 1.02, 1.03)
 plot_local_r(chains, simulated_rhat, theoretical_r_values, threshold = 1.01,
              xlabels = xlabels, col = c(colors[3], colors[2]),
              xlim = c(-1.5,1.5), ylim=c(1,1.03), title =&quot;&quot;)</code></pre>
-<p><img src="Simultations_files/figure-html/laplace_uniform_x2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/laplace_uniform_x2-1.png" width="1152" /></p>
 <p>Replications show that rank-<span class="math inline">\(\hat{R}\)</span> is fooled in the same way as <span class="math inline">\(\hat{R}\)</span> in this example:</p>
 <pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
@@ -429,7 +429,7 @@ xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 plot_hist(R_matrix_lapl_unif, colors = r_colors, bin_size = 0.003,
           xlabels = xlabels, plot_legend = TRUE, threshold = 1.01,
           lim_y_axis = reps, vaxis_pos = 0.9985)</code></pre>
-<p><img src="Simultations_files/figure-html/laplace_uniform_hists-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/laplace_uniform_hists-1.png" width="1152" /></p>
 </div>
 <div id="example-iv-uniform-and-normal-distributions" class="section level3" number="1.2.2">
 <h3 number="1.2.2"><span class="header-section-number">1.2.2</span> Example (iv): Uniform and Normal distributions</h3>
@@ -450,10 +450,10 @@ chains &lt;- gen_chains(M, 2*N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0194
+Local R-hat obtained:  1.0203
 p-value:  0.003
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.019354</code></pre>
+<pre><code>[1] 1.020258</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.005, 1.01, 1.015, 1.02)
@@ -461,7 +461,7 @@ xlabels &lt;- c(1, 1.005, 1.01, 1.015, 1.02)
 plot_local_r(chains, simulated_rhat, theoretical_r_values, 
              xlabels = xlabels, col=c(colors[3], colors[2]), threshold = 1.01,
              xlim = c(-2,2), ylim=c(0.999,1.025), title =&quot;Gaussian/Uniform distributions&quot;)</code></pre>
-<p><img src="Simultations_files/figure-html/gaussian_uniform_x2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/gaussian_uniform_x2-1.png" width="1152" /></p>
 <p>Replications confirms that this construction are fooling the different versions of <span class="math inline">\(\hat{R}\)</span> except <span class="math inline">\(\hat{R}_\infty\)</span>.</p>
 <pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
@@ -476,7 +476,7 @@ xlabels = c(1, 1.01, 1.02, 1.03)
 plot_hist(R_matrix_norm_unif, colors = r_colors, xlabels = xlabels,
           bin_size = 0.002, plot_legend = TRUE, threshold = 1.01,
           lim_y_axis = reps, vaxis_pos = 0.999)</code></pre>
-<p><img src="Simultations_files/figure-html/gaussian_uniform_hists-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/gaussian_uniform_hists-1.png" width="1152" /></p>
 </div>
 <div id="example-v-uniform-and-exponential-distributions" class="section level3" number="1.2.3">
 <h3 number="1.2.3"><span class="header-section-number">1.2.3</span> Example (v): Uniform and Exponential distributions</h3>
@@ -500,17 +500,17 @@ rdists &lt;- c((function(n) rexp(n)),
 chains &lt;- gen_chains(M, N, rdists)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0545
+Local R-hat obtained:  1.0924
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.054547</code></pre>
+<pre><code>[1] 1.092427</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
 plot_local_r(chains, simulated_rhat, theoretical_r_values,
              xlabels = xlabels, col = c(colors[3], colors[2]),
              xlim = c(-1, 6), ylim=c(1,1.09), title =&quot;&quot;)</code></pre>
-<p><img src="Simultations_files/figure-html/exp_uniform_x2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/exp_uniform_x2-1.png" width="1152" /></p>
 <pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
@@ -522,7 +522,7 @@ R_matrix_exp_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N,
 
 plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.007, 
           lim_y_axis = 500, vaxis_pos = 0.997)</code></pre>
-<p><img src="Simultations_files/figure-html/exp_uniform_hists-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/exp_uniform_hists-1.png" width="1152" /></p>
 </div>
 </div>
 <div id="threshold-estimation" class="section level2" number="1.3">
@@ -530,6 +530,12 @@ plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.007,
 <p>In this part we focus on the case where all the distributions are the same, to verify the behavior in the null hypothesis.</p>
 <pre class="r"><code>M &lt;- 2
 N &lt;- 200
+
+uniform_rdists &lt;- c((function(n) runif(n, -sigma, sigma)),
+                    (function(n) runif(n, -sigma, sigma)))
+
+pareto_rdists &lt;- c((function(n) rpareto(n, location = etaM, shape = alpha)),
+                   (function(n) rpareto(n, location = etaM, shape = alpha)))
 
 colors_same &lt;- c(rgb(0.55, 0, 0.4, 0.8), rgb(0.4, 0, 0.7, 0.8), rgb(0.5, 0, 0.5, 0.9))
 
@@ -549,7 +555,7 @@ xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
           threshold = 1.01001, xlabels = xlabels, bin_size = 0.0020, 
           lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
-<p><img src="Simultations_files/figure-html/same_uniform_hists1-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/same_uniform_hists1-1.png" width="1152" /></p>
 <pre class="r"><code>M &lt;- 4
 N &lt;- 100
 
@@ -570,7 +576,7 @@ xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
           xlabels = xlabels, bin_size = 0.002, threshold = 1.02,
           lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
-<p><img src="Simultations_files/figure-html/same_uniform_hists2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/same_uniform_hists2-1.png" width="1152" /></p>
 <pre class="r"><code>M &lt;- 8
 N &lt;- 50
 
@@ -590,7 +596,7 @@ xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
           threshold = 1.03, xlabels = xlabels, bin_size = 0.002, 
           lim_y_axis = 200, vaxis_pos = 0.9985)</code></pre>
-<p><img src="Simultations_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
 </div>
 <div id="summary" class="section level2" number="1.4">
 <h2 number="1.4"><span class="header-section-number">1.4</span> Summary</h2>
@@ -603,7 +609,7 @@ ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
     geom_hline(yintercept=1.02, linetype=&quot;dashed&quot;, 
              color = &quot;green&quot;, size=0.5) +
     xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;)</code></pre>
-<p><img src="Simultations_files/figure-html/unnamed-chunk-8-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-8-1.png" width="1152" /></p>
 </div>
 </div>
 <div id="multivariate-examples" class="section level1" number="2">
@@ -650,10 +656,10 @@ N &lt;- 200
 chains &lt;- gen_bvnormal_chains(M, N, rho)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0245
+Local R-hat obtained:  1.0305
 p-value:  0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.024456</code></pre>
+<pre><code>[1] 1.030476</code></pre>
 <p>We simulate 100 experiments, which result as 100 draws of the different <span class="math inline">\(\hat{R}\)</span>.</p>
 <p>Histogram of the corresponding values of <span class="math inline">\(\hat{R}_\infty\)</span> and the multivariate <span class="math inline">\(\hat{R}\)</span> of Brooks and Gelman (1998) :</p>
 <pre class="r"><code>rho &lt;- 0.9
@@ -674,7 +680,7 @@ xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12)
 plot_hist(R_matrix, colors = r_colors, bin_size = 0.0045, 
           lim_y_axis = 30, vaxis_pos = 0.995,
           xlabels = xlabels, plot_threshold = F)</code></pre>
-<p><img src="Simultations_files/figure-html/bivariate_hists2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/bivariate_hists2-1.png" width="1152" /></p>
 <div id="evolution-of-the-different-value-of-hatr-with-rho" class="section level3" number="2.1.1">
 <h3 number="2.1.1"><span class="header-section-number">2.1.1</span> Evolution of the different value of <span class="math inline">\(\hat{R}\)</span> with <span class="math inline">\(\rho\)</span></h3>
 <p>Except for <span class="math inline">\(R^*\)</span>, we consider the mean of the 100 draws for the different versions of <span class="math inline">\(\hat{R}\)</span>, and plot the evolution of this value with <span class="math inline">\(\rho\)</span>:</p>
@@ -734,7 +740,7 @@ legend(x=0.6, y=1.14, col=c(colors[4], colors[3], colors[2]), pch=19,
        legend = c(expression(italic(hat(R))),
                   expression(italic(hat(R)[infinity])),
                   expression(italic(R[infinity]))), cex=2)</code></pre>
-<p><img src="Simultations_files/figure-html/bivariate_rho-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/bivariate_rho-1.png" width="1152" /></p>
 <p>Remarks :</p>
 <ul>
 <li>Our version is the most sensitive, and is more sensitive as <span class="math inline">\(|\rho|\)</span> increases (which is great)</li>
@@ -780,12 +786,12 @@ r_colors &lt;- c(colors[3], colors[4])
 
 S &lt;- generate_sigma_matrix(d)
 print(S)</code></pre>
-<pre><code>           [,1]        [,2]       [,3]        [,4]        [,5]
-[1,]  1.0000000 -0.67289587 -0.8116578  0.27111833 -0.15643808
-[2,] -0.6728959  1.00000000  0.5652830  0.11993363  0.09229557
-[3,] -0.8116578  0.56528305  1.0000000  0.25080351  0.21448793
-[4,]  0.2711183  0.11993363  0.2508035  1.00000000 -0.02406259
-[5,] -0.1564381  0.09229557  0.2144879 -0.02406259  1.00000000</code></pre>
+<pre><code>           [,1]       [,2]        [,3]         [,4]         [,5]
+[1,]  1.0000000 -0.2596170  0.52925407 -0.436931935  0.458389364
+[2,] -0.2596170  1.0000000  0.16979979  0.829685959  0.312677068
+[3,]  0.5292541  0.1697998  1.00000000 -0.203219993  0.015539987
+[4,] -0.4369319  0.8296860 -0.20321999  1.000000000 -0.009007711
+[5,]  0.4583894  0.3126771  0.01553999 -0.009007711  1.000000000</code></pre>
 <pre class="r"><code>R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d, S)), 
                          r_func = r_functions, 
                          r_names = r_names, 
@@ -794,7 +800,7 @@ print(S)</code></pre>
 plot_hist(R_matrix, colors = r_colors, bin_size = 0.002, 
           lim_y_axis = 25, vaxis_pos = 1,
           plot_threshold = F)</code></pre>
-<p><img src="Simultations_files/figure-html/multivariate_hist1-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/multivariate_hist1-1.png" width="1152" /></p>
 <p>Doing the same experiment but with a new <span class="math inline">\(\Sigma\)</span> on each repetitions will result on a histogram more spread for <span class="math inline">\(\hat{R}_\infty\)</span>:</p>
 <pre class="r"><code>d &lt;- 5
 
@@ -816,7 +822,7 @@ plot_hist(R_matrix, colors = r_colors,
           xlabels = xlabels, bin_size = 0.002, 
           lim_y_axis = 20, vaxis_pos = 0.997,
           plot_threshold = F)</code></pre>
-<p><img src="Simultations_files/figure-html/multivariate_hist2-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/multivariate_hist2-1.png" width="1152" /></p>
 <p>To avoid this issue, <span class="math inline">\(\hat{R}_\infty\)</span> can be computed on all directions, which means if <span class="math inline">\(d=3\)</span> that <span class="math inline">\(\hat{R}\)</span> is computed on <span class="math display">\[
   I\left(\theta_1^{(n,m)} \leq x_1, \theta_2^{(n,m)} \leq x_2, \theta_3^{(n,m)} \leq x_3\right)\\
   I\left(\theta_1^{(n,m)} \geq x_1, \theta_2^{(n,m)} \leq x_2, \theta_3^{(n,m)} \leq x_3\right)\\
@@ -857,7 +863,6 @@ for (d in 3:d_max){
 R_df = as.data.frame(R_array)
 R_df$Values = as.numeric(R_df$Values)
 
-# pdf(file = &quot;/scratch/tmoins/Documents/Code_rhat/figure_article/hist_directions.pdf&quot;, width = 18, height = 8)
 ggplot(R_df, aes(x = Values, y = as.factor(Dim), fill = Nb_Dir)) +
   geom_density_ridges(stat = &quot;binline&quot;, bins= 40,
                       scale = 1, alpha = 0.7) +
@@ -867,8 +872,7 @@ ggplot(R_df, aes(x = Values, y = as.factor(Dim), fill = Nb_Dir)) +
                      n.breaks = 8) +
   scale_fill_manual(values=c(&quot;#32a632&quot;, &quot;#4287f5&quot;)) +
   theme_ridges(font_size=22)</code></pre>
-<p><img src="Simultations_files/figure-html/r_dimensions-1.png" width="1152" /></p>
-<pre class="r"><code># dev.off()</code></pre>
+<p><img src="Simulations_files/figure-html/r_dimensions-1.png" width="1152" /></p>
 <p>(WARNING: <span class="math inline">\(d&gt;6\)</span> the chunk is very dangerous to run!!)</p>
 </div>
 </div>
@@ -992,7 +996,7 @@ xlabels = c(1, 1.01, 1.02, 1.03, 1.04, 1.05)
 plot_hist(R_matrix_logit, colors = r_colors, xlabels = xlabels,
           vaxis_pos = 0.998, plot_threshold = F, threshold = 1.03,
           bin_size = 0.003, lim_y_axis = 25)</code></pre>
-<p><img src="Simultations_files/figure-html/unnamed-chunk-14-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-14-1.png" width="1152" /></p>
 <pre class="r"><code>gen_beta_logit_lp &lt;- function(i){
   fit_logit &lt;- readRDS(paste(stan_folder, &quot;logit/logit_reg_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
   mon &lt;- monitor(fit_logit)
@@ -1015,7 +1019,7 @@ xlabels = c(1, 1.01, 1.02, 1.03, 1.04, 1.05)
 plot_hist(R_matrix_logit2, colors = r_colors, vaxis_pos = 0.998,
           xlabels = xlabels, plot_threshold = T,
           bin_size = 0.003, lim_y_axis = 25)</code></pre>
-<p><img src="Simultations_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
 </div>
 </div>
 
