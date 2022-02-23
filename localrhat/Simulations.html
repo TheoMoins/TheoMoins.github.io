@@ -242,7 +242,6 @@ div.tocify {
 
 <h1 class="title toc-ignore">On the use of a local R-hat to improve MCMC convergence diagnostic</h1>
 <h4 class="author">Théo Moins, Julyan Arbel, Stéphane Girard, Anne Dutfoy</h4>
-<h4 class="date">5/2/2022</h4>
 
 </div>
 
@@ -350,10 +349,10 @@ chains &lt;- gen_chains(M, N, pareto_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0513
+Local R-hat obtained:  1.0416
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.051317</code></pre>
+<pre><code>[1] 1.04161</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 plot_local_r(chains, simulated_rhat, theoretical_r_values,
@@ -402,10 +401,10 @@ chains &lt;- gen_chains(M, N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0172
-p-value:  0.00700000000000001
+Local R-hat obtained:  1.0201
+p-value:  0.003
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.017231</code></pre>
+<pre><code>[1] 1.020069</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.01, 1.02, 1.03)
@@ -450,10 +449,10 @@ chains &lt;- gen_chains(M, 2*N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0203
+Local R-hat obtained:  1.0186
 p-value:  0.003
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.020258</code></pre>
+<pre><code>[1] 1.018643</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.005, 1.01, 1.015, 1.02)
@@ -500,10 +499,10 @@ rdists &lt;- c((function(n) rexp(n)),
 chains &lt;- gen_chains(M, N, rdists)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0924
+Local R-hat obtained:  1.0666
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.092427</code></pre>
+<pre><code>[1] 1.066571</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
@@ -656,10 +655,10 @@ N &lt;- 200
 chains &lt;- gen_bvnormal_chains(M, N, rho)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0305
+Local R-hat obtained:  1.0308
 p-value:  0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.030476</code></pre>
+<pre><code>[1] 1.030759</code></pre>
 <p>We simulate 100 experiments, which result as 100 draws of the different <span class="math inline">\(\hat{R}\)</span>.</p>
 <p>Histogram of the corresponding values of <span class="math inline">\(\hat{R}_\infty\)</span> and the multivariate <span class="math inline">\(\hat{R}\)</span> of Brooks and Gelman (1998) :</p>
 <pre class="r"><code>rho &lt;- 0.9
@@ -786,12 +785,12 @@ r_colors &lt;- c(colors[3], colors[4])
 
 S &lt;- generate_sigma_matrix(d)
 print(S)</code></pre>
-<pre><code>           [,1]       [,2]        [,3]         [,4]         [,5]
-[1,]  1.0000000 -0.2596170  0.52925407 -0.436931935  0.458389364
-[2,] -0.2596170  1.0000000  0.16979979  0.829685959  0.312677068
-[3,]  0.5292541  0.1697998  1.00000000 -0.203219993  0.015539987
-[4,] -0.4369319  0.8296860 -0.20321999  1.000000000 -0.009007711
-[5,]  0.4583894  0.3126771  0.01553999 -0.009007711  1.000000000</code></pre>
+<pre><code>            [,1]        [,2]        [,3]       [,4]       [,5]
+[1,]  1.00000000 -0.01650453 -0.76513638  0.1333087  0.3563378
+[2,] -0.01650453  1.00000000 -0.07924185  0.7074565  0.4977615
+[3,] -0.76513638 -0.07924185  1.00000000 -0.5369093 -0.4625888
+[4,]  0.13330868  0.70745650 -0.53690931  1.0000000  0.7853580
+[5,]  0.35633782  0.49776155 -0.46258879  0.7853580  1.0000000</code></pre>
 <pre class="r"><code>R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d, S)), 
                          r_func = r_functions, 
                          r_names = r_names, 
@@ -1020,6 +1019,529 @@ plot_hist(R_matrix_logit2, colors = r_colors, vaxis_pos = 0.998,
           xlabels = xlabels, plot_threshold = T,
           bin_size = 0.003, lim_y_axis = 25)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="empirical-examples" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Empirical examples</h1>
+<div id="autoregressive-model" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Autoregressive model</h2>
+<pre class="r"><code>autoregressive &lt;- function(n, rho, sigma){
+  chain &lt;- c()
+  pre &lt;- 0
+  eps &lt;- rnorm(n, 0, sigma)
+  for (t in 1:n){
+    suiv &lt;- rho*pre+eps[t]
+    chain &lt;- c(chain, suiv)
+    pre &lt;- suiv
+  }
+  return(chain)
+}
+
+gen_autoreg_chains &lt;- function(M, N, rho, sigma, sigmaM){
+  return (array(c(replicate(M-1, autoregressive(N, rho, sigma)), 
+                  autoregressive(N, rho, sigmaM)), c(N,M)))
+}</code></pre>
+<div id="plot-of-r-hatx" class="section level3" number="3.1.1">
+<h3 number="3.1.1"><span class="header-section-number">3.1.1</span> Plot of R-hat(x)</h3>
+<pre class="r"><code>M &lt;- 4
+sigma &lt;- 1
+sigmaM &lt;- 2
+rho &lt;- 1/2
+
+
+chains = gen_autoreg_chains(M, N, rho, sigma, sigmaM)
+rhat_infinity(chains, verbose = T)</code></pre>
+<pre><code>Threshold at confidence level 5%:  1.0195
+Local R-hat obtained:  1.0423
+p-value: &lt; 0.001
+WARNING: A convergence issue has been diagnosed</code></pre>
+<pre><code>[1] 1.042278</code></pre>
+<pre class="r"><code>simulated_rhat = all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
+
+plot_local_r(chains, simulated_rhat, col=c(colors[3], colors[2]),
+             xlim = c(-6,6), ylim=c(1,1.07), title =&quot;&quot;)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-18-1.png" width="1152" /></p>
+</div>
+<div id="repetitions-comparison-of-different-r-hat" class="section level3" number="3.1.2">
+<h3 number="3.1.2"><span class="header-section-number">3.1.2</span> Repetitions: comparison of different R-hat</h3>
+<pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_autoreg &lt;- repetitions_R(
+  chains_func = (function() gen_autoreg_chains(M, N, rho, sigma, sigmaM)), 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps)
+
+plot_hist(R_matrix_autoreg, colors = r_colors, 
+          xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1),
+          bin_size = 0.004, lim_y_axis = 50)</code></pre>
+<p><img src="Simulations_files/figure-html/autoreg_hist-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="hmc-on-cauchy-distribution" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> HMC on Cauchy distribution</h2>
+<p>In this section, we will study two parameterization of Cauchy using HMC: - Nominal parameterization which is a direct one. - Alternative parameterization which is a scale mixture of Gaussians.</p>
+<p>To study these two parametrizations we will use rank plots which illustrate a mixing problem if they are not uniform. First we will look for an element of the vector for which our <span class="math inline">\(\hat R\)</span> is one of the highest. Here we want rather to study the tail of the distribution than the bulk because of the thick tail of the Cauchy distribution. Finally, we will use the rank plots of this element found to know if we have a mixing problem or not.</p>
+<div id="nominal-parameterization" class="section level3" number="3.2.1">
+<h3 number="3.2.1"><span class="header-section-number">3.2.1</span> Nominal parameterization</h3>
+<p>Model :</p>
+<pre class="r"><code>writeLines(readLines(paste(stan_folder, &quot;cauchy_nom.stan&quot;, sep=&quot;&quot;)))</code></pre>
+<pre><code>parameters {
+  vector[50] x;
+}
+
+model {
+  x ~ cauchy(0, 1);
+}
+
+generated quantities {
+  real I = fabs(x[1]) &lt; 1 ? 1 : 0;
+}</code></pre>
+<pre class="r"><code># fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_nom.stan&quot;, sep=&quot;&quot;), seed = 7878, refresh = 0)
+# saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_nom.rds&quot;, sep=&quot;&quot;))
+fit_nom &lt;- readRDS(paste(stan_folder, &quot;cauchy_fits/cauchy_nom.rds&quot;, sep=&quot;&quot;))
+
+mon &lt;- monitor(fit_nom)
+
+which_max_rhat &lt;- which.max(mon[1:50, &#39;Rhat&#39;])
+max_rhat &lt;- max(mon[1:50, &#39;Rhat&#39;])
+
+subset(mon, Rhat == max_rhat)</code></pre>
+<pre><code>Inference for the input samples ( chains: each with iter = ; warmup = ):
+
+        Q5  Q50    Q95  Mean   SD  Rhat Bulk_ESS Tail_ESS
+x[18] -4.1 0.56 172.82 35.87 65.4  1.54        7       32
+
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
+per chain is considered good), and Rhat is the potential scale reduction 
+factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
+<div id="plot-of-r-hatx-1" class="section level4" number="3.2.1.1">
+<h4 number="3.2.1.1"><span class="header-section-number">3.2.1.1</span> Plot of R-hat(x)</h4>
+<pre class="r"><code>chains &lt;- as.array(fit_nom)
+dim_chains &lt;- dim(chains)
+
+rhat_inf &lt;- c()
+
+for (i in 1:dim_chains[3]) {
+  chains_i &lt;- chains[, , i]
+  rhat_inf_i &lt;- rhat_infinity(chains_i)
+  rhat_inf &lt;- c(rhat_inf, rhat_inf_i)
+}
+
+mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
+which_max_rhat_inf &lt;- which.max(mon[1:50, &#39;Rhat_inf&#39;])
+
+rhat_infinity(chains[ , , which_max_rhat_inf], verbose = T)</code></pre>
+<pre><code>Threshold at confidence level 5%:  1.0195
+Local R-hat obtained:  7.364
+p-value: &lt; 0.001
+WARNING: A convergence issue has been diagnosed</code></pre>
+<pre><code>[1] 7.364029</code></pre>
+<pre class="r"><code>simulated_rhat = all_local_rhat(chains[ , , which_max_rhat_inf], max_nb_points = &quot;ALL&quot;)
+
+xlabels = 1:10
+
+plot_local_r(chains[ , , which_max_rhat_inf], simulated_rhat,
+             col=c(colors[3], colors[2]), xlabels = xlabels,
+             xlim = c(-50,200), ylim=c(1,10), title =&quot;&quot;)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-23-1.png" width="1152" /></p>
+</div>
+<div id="repetitions-comparison-of-different-r-hat-1" class="section level4" number="3.2.1.2">
+<h4 number="3.2.1.2"><span class="header-section-number">3.2.1.2</span> Repetitions: comparison of different R-hat</h4>
+<pre class="r"><code>gen_diverging_cauchy &lt;- function(i){
+  # fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_nom.stan&quot;, sep=&quot;&quot;), refresh = 0)
+  # saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_fits/cauchy_nom_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  fit_nom &lt;- readRDS(paste(stan_folder, &quot;cauchy_fits/cauchy_nom_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  
+  
+  mon &lt;- monitor(fit_nom)
+  chains &lt;- as.array(fit_nom)
+  dim_chains &lt;- dim(chains)
+  
+  rhat_inf &lt;- c()
+  
+  for (i in 1:dim_chains[3]) {
+    chains_i &lt;- chains[, , i]
+    rhat_inf_i &lt;- rhat_infinity(chains_i)
+    rhat_inf &lt;- c(rhat_inf, rhat_inf_i)
+  }
+  mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
+  which_max_rhat_inf &lt;- which.max(mon[1:50, &#39;Rhat_inf&#39;])
+  
+  return (chains[, , which_max_rhat_inf])
+}
+
+r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_cauchy &lt;- repetitions_R(chains_func = gen_diverging_cauchy, 
+                                 r_func = r_functions, 
+                                 r_names = r_names, 
+                                 reps = reps, saved_model = TRUE)
+
+xlabels = c(1, 1.1, 1.2, 1.3, 1.4)
+plot_hist(R_matrix_cauchy, colors = r_colors, xlabels = xlabels,
+          bin_size = 0.017, lim_y_axis = 20)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-24-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="alternative-parameterization" class="section level3" number="3.2.2">
+<h3 number="3.2.2"><span class="header-section-number">3.2.2</span> Alternative parameterization</h3>
+<p>Model :</p>
+<pre class="r"><code>writeLines(readLines(paste(stan_folder, &quot;cauchy_alt_1.stan&quot;, sep=&quot;&quot;)))</code></pre>
+<pre><code>parameters {
+  vector[50] x_a;
+  vector&lt;lower=0&gt;[50] x_b;
+}
+
+transformed parameters {
+  vector[50] x = x_a ./ sqrt(x_b);
+}
+
+model {
+  x_a ~ normal(0, 1);
+  x_b ~ gamma(0.5, 0.5);
+}
+
+generated quantities {
+  real I = fabs(x[1]) &lt; 1 ? 1 : 0;
+}</code></pre>
+<pre class="r"><code># fit_alt1 &lt;- stan(file = paste(stan_folder, &quot;cauchy_alt_1.stan&quot;, sep=&quot;&quot;), seed = 7878, refresh = 0)
+# saveRDS(fit_alt1, paste(stan_folder, &quot;cauchy_fits/cauchy_alt.rds&quot;, sep=&quot;&quot;))
+fit_alt1 &lt;- readRDS(paste(stan_folder, &quot;cauchy_fits/cauchy_alt.rds&quot;, sep=&quot;&quot;))
+mon &lt;- monitor(fit_alt1)
+
+
+which_max_rhat &lt;- which.max(mon[101:150, &#39;Rhat&#39;])
+max_rhat &lt;- max(mon[101:150, &#39;Rhat&#39;])
+subset(mon, Rhat == max_rhat)</code></pre>
+<pre><code>Inference for the input samples ( chains: each with iter = ; warmup = ):
+
+         Q5  Q50  Q95  Mean     SD  Rhat Bulk_ESS Tail_ESS
+x[40] -6.22 0.03 6.33 -6.15 204.09     1     3667     2250
+
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
+per chain is considered good), and Rhat is the potential scale reduction 
+factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
+<div id="plot-of-r-hatx-2" class="section level4" number="3.2.2.1">
+<h4 number="3.2.2.1"><span class="header-section-number">3.2.2.1</span> Plot of R-hat(x)</h4>
+<pre class="r"><code>chains &lt;- as.array(fit_alt1)
+dim_chains &lt;- dim(chains)
+
+rhat_inf &lt;- c()
+
+for (i in 1:dim_chains[3]) {
+  chains_i &lt;- chains[, , i]
+  rhat_inf_i &lt;- rhat_infinity(chains_i)
+  rhat_inf &lt;- c(rhat_inf, rhat_inf_i)
+}
+
+mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
+which_max_rhat_inf &lt;- which.max(mon[101:150, &#39;Rhat_inf&#39;])
+
+rhat_infinity(chains[ , , which_max_rhat_inf], verbose = T)</code></pre>
+<pre><code>Threshold at confidence level 5%:  1.0195
+Local R-hat obtained:  1.0015
+p-value:  1
+At 5%, no convergence issues have been diagnosed</code></pre>
+<pre><code>[1] 1.001452</code></pre>
+<pre class="r"><code>simulated_rhat = all_local_rhat(chains[ , , which_max_rhat_inf], max_nb_points = &quot;ALL&quot;)
+
+xlabels = c(1, 1.01, 1.02, 1.03)
+plot_local_r(chains[, , which_max_rhat], simulated_rhat, 
+             col=c(colors[3], colors[2]), xlabels = xlabels,
+             xlim = c(-4,4), ylim=c(0.9995,1.03), title =&quot;&quot;)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-29-1.png" width="1152" /></p>
+</div>
+<div id="repetitions-comparison-of-different-r-hat-2" class="section level4" number="3.2.2.2">
+<h4 number="3.2.2.2"><span class="header-section-number">3.2.2.2</span> Repetitions: comparison of different R-hat</h4>
+<pre class="r"><code>gen_converging_cauchy &lt;- function(i){
+  # fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_alt_1.stan&quot;, sep=&quot;&quot;), refresh = 0)
+  # saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_fits/cauchy_alt_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  fit_nom &lt;- readRDS(paste(stan_folder, &quot;cauchy_fits/cauchy_alt_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  
+  mon &lt;- monitor(fit_nom)
+  chains &lt;- as.array(fit_nom)
+  dim_chains &lt;- dim(chains)
+  
+  rhat_inf &lt;- c()
+  
+  for (i in 1:dim_chains[3]) {
+    chains_i &lt;- chains[, , i]
+    rhat_inf_i &lt;- rhat_infinity(chains_i)
+    rhat_inf &lt;- c(rhat_inf, rhat_inf_i)
+  }
+  mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
+  which_max_rhat_inf &lt;- which.max(mon[101:150, &#39;Rhat_inf&#39;])
+  
+  return (chains[, , which_max_rhat_inf])
+}
+
+r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_cauchy2 &lt;- repetitions_R(chains_func = gen_converging_cauchy, 
+                                  r_func = r_functions, 
+                                  r_names = r_names, 
+                                  reps = reps,
+                                  saved_model = TRUE)
+
+xlabels = c(1, 1.005, 1.01, 1.015, 1.02, 1.025, 1.03)
+plot_hist(R_matrix_cauchy2, colors = r_colors, xlabels = xlabels,
+          bin_size = 0.0018, lim_y_axis = reps)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-30-1.png" width="1152" /></p>
+</div>
+</div>
+</div>
+<div id="hierarchical-model-eight-schools" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Hierarchical model: Eight Schools</h2>
+<p>Model :</p>
+<pre class="r"><code>writeLines(readLines(paste(stan_folder, &quot;eight_schools_cp.stan&quot;, sep=&quot;&quot;)))</code></pre>
+<pre><code>data {
+  int&lt;lower=0&gt; J;
+  real y[J];
+  real&lt;lower=0&gt; sigma[J];
+}
+
+parameters {
+  real mu;
+  real&lt;lower=0&gt; tau;
+  real theta[J];
+}
+
+model {
+  mu ~ normal(0, 5);
+  tau ~ cauchy(0, 5);
+  theta ~ normal(mu, tau);
+  y ~ normal(theta, sigma);
+}</code></pre>
+<div id="centered-eight-schools-model" class="section level3" number="3.3.1">
+<h3 number="3.3.1"><span class="header-section-number">3.3.1</span> Centered Eight Schools model</h3>
+<p>We will proceed in the same way as the case of the Cauchy distribution concerning the rank plots, but this time we will focus on the parameter <span class="math inline">\(\tau\)</span>. And our choice is due to the fact that the distribution becomes more centralized on the population mean when faced with the small values of the population standard deviation <span class="math inline">\(\tau\)</span>, which makes it difficult to explore this distribution by MCMC chains.</p>
+<pre class="r"><code>eight_schools &lt;- read_rdump(paste(stan_folder, &quot;eight_schools.data.R&quot;, sep=&quot;&quot;))
+# fit_cp &lt;- stan(
+#   file = paste(stan_folder, &quot;eight_schools_cp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
+#   iter = 2000, chains = 4, seed = 120, refresh = 0,
+#   control = list(adapt_delta = 0.95)
+# )
+# saveRDS(fit_cp, paste(stan_folder, &quot;eight_schools_fits/eight_schools_cp.rds&quot;, sep=&quot;&quot;))
+fit_cp &lt;- readRDS(paste(stan_folder, &quot;eight_schools_fits/eight_schools_cp.rds&quot;, sep=&quot;&quot;))
+
+mon &lt;- monitor(fit_cp)
+print(mon)</code></pre>
+<pre><code>Inference for the input samples (4 chains: each with iter = 2000; warmup = 1000):
+
+             Q5    Q50   Q95   Mean   SD  Rhat Bulk_ESS Tail_ESS
+mu        -0.94   4.84  9.48   4.80 3.32  1.04       87      693
+tau        0.64   2.80 10.29   3.77 3.27  1.06       94      123
+theta[1]  -1.48   6.43 17.06   6.68 5.81  1.01      622     1021
+theta[2]  -2.61   5.52 12.57   5.35 4.79  1.02      309     1192
+theta[3]  -5.21   4.62 11.85   4.31 5.40  1.03      169     1291
+theta[4]  -3.41   5.29 12.03   5.04 4.80  1.03      216     1617
+theta[5]  -4.66   4.21 10.29   3.80 4.82  1.03      216     1155
+theta[6]  -4.38   4.69 11.01   4.40 4.88  1.02      186     1648
+theta[7]  -0.77   6.65 15.36   6.74 5.03  1.01      525      844
+theta[8]  -3.48   5.46 13.39   5.31 5.32  1.02      467     1290
+lp__     -25.23 -14.77 -2.54 -14.33 7.04  1.08       46      104
+
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
+per chain is considered good), and Rhat is the potential scale reduction 
+factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
+<div id="plot-of-r-hatx-3" class="section level4" number="3.3.1.1">
+<h4 number="3.3.1.1"><span class="header-section-number">3.3.1.1</span> Plot of R-hat(x)</h4>
+<pre class="r"><code>chains &lt;- as.array(fit_cp)
+dim_chains &lt;- dim(chains)
+
+simulated_rhat = all_local_rhat(chains[, , &quot;tau&quot;], max_nb_points = &quot;ALL&quot;)
+
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+
+plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat, 
+             col=c(colors[3], colors[2]), xlabels = xlabels,
+             xlim = c(0,25), ylim=c(0.999,1.04), title =&quot;&quot;)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-34-1.png" width="1152" /></p>
+</div>
+<div id="repetitions-comparison-of-different-r-hat-3" class="section level4" number="3.3.1.2">
+<h4 number="3.3.1.2"><span class="header-section-number">3.3.1.2</span> Repetitions: comparison of different R-hat</h4>
+<pre class="r"><code>gen_centered_eight_school &lt;- function(i){
+  # fit_cp &lt;- stan(
+  #   file = paste(stan_folder, &quot;eight_schools_cp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
+  #   iter = 2000, chains = 4, refresh = 0,
+  #   control = list(adapt_delta = 0.95)
+  # )
+  # saveRDS(fit_cp, paste(stan_folder, &quot;eight_schools_fits/eight_schools_cp_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  fit_cp &lt;- readRDS(paste(stan_folder, &quot;eight_schools_fits/eight_schools_cp_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  
+  mon &lt;- monitor(fit_cp)
+  chains &lt;- as.array(fit_cp)
+
+  return (chains[, , &quot;tau&quot;])
+}
+
+r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_8schools &lt;- repetitions_R(chains_func = gen_centered_eight_school, 
+                                   r_func = r_functions, 
+                                   r_names = r_names, 
+                                   reps = reps,
+                                   saved_model = TRUE)
+
+xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14)
+plot_hist(R_matrix_8schools, colors = r_colors, xlabels = xlabels,
+          bin_size = 0.005, lim_y_axis = 30)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-35-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="non-centered-eight-schools-model" class="section level3" number="3.3.2">
+<h3 number="3.3.2"><span class="header-section-number">3.3.2</span> Non-centered Eight Schools model</h3>
+<p>Model :</p>
+<pre class="r"><code>writeLines(readLines(paste(stan_folder, &quot;eight_schools_ncp.stan&quot;, sep=&quot;&quot;)))</code></pre>
+<pre><code>data {
+  int&lt;lower=0&gt; J;
+  real y[J];
+  real&lt;lower=0&gt; sigma[J];
+}
+
+parameters {
+  real mu;
+  real&lt;lower=0&gt; tau;
+  real theta_tilde[J];
+}
+
+transformed parameters {
+  real theta[J];
+  for (j in 1:J)
+    theta[j] = mu + tau * theta_tilde[j];
+}
+
+model {
+  mu ~ normal(0, 5);
+  tau ~ cauchy(0, 5);
+  theta_tilde ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+}</code></pre>
+<pre class="r"><code>fit_ncp2 &lt;- stan(
+  file = paste(stan_folder, &quot;eight_schools_ncp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
+  iter = 2000, chains = 4, seed = 483892929, refresh = 0,
+  control = list(adapt_delta = 0.95)
+)</code></pre>
+<pre><code>Running /usr/lib/R/bin/R CMD SHLIB foo.c
+gcc -std=gnu99 -std=gnu11 -I&quot;/usr/share/R/include&quot; -DNDEBUG   -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/Rcpp/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/unsupported&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/BH/include&quot; -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/src/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppParallel/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/rstan/include&quot; -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include &#39;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp&#39;  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1      -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-J7pprH/r-base-4.1.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c foo.c -o foo.o
+In file included from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Core:88:0,
+                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Dense:1,
+                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
+                 from &lt;command-line&gt;:0:
+/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name ‘namespace’
+ namespace Eigen {
+ ^~~~~~~~~
+/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:17: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ namespace Eigen {
+                 ^
+In file included from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Dense:1:0,
+                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
+                 from &lt;command-line&gt;:0:
+/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Core:96:10: fatal error: complex: Aucun fichier ou dossier de ce type
+ #include &lt;complex&gt;
+          ^~~~~~~~~
+compilation terminated.
+/usr/lib/R/etc/Makeconf:168: recipe for target &#39;foo.o&#39; failed
+make: *** [foo.o] Error 1</code></pre>
+<pre class="r"><code># saveRDS(fit_ncp2, paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp.rds&quot;, sep=&quot;&quot;))
+fit_ncp2 &lt;- readRDS(paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp.rds&quot;, sep=&quot;&quot;))
+
+
+mon &lt;- monitor(fit_ncp2)
+print(mon)</code></pre>
+<pre><code>Inference for the input samples (4 chains: each with iter = 2000; warmup = 1000):
+
+                   Q5   Q50   Q95  Mean   SD  Rhat Bulk_ESS Tail_ESS
+mu              -1.13  4.53  9.85  4.49 3.32     1     5375     3332
+tau              0.26  2.79  9.74  3.56 3.09     1     3281     2729
+theta_tilde[1]  -1.30  0.32  1.87  0.30 0.97     1     5571     3052
+theta_tilde[2]  -1.42  0.08  1.55  0.08 0.90     1     4405     2885
+theta_tilde[3]  -1.69 -0.10  1.45 -0.09 0.96     1     5486     2531
+theta_tilde[4]  -1.52  0.05  1.64  0.05 0.94     1     5183     3102
+theta_tilde[5]  -1.64 -0.16  1.33 -0.16 0.91     1     4884     3289
+theta_tilde[6]  -1.60 -0.07  1.46 -0.07 0.94     1     5584     3087
+theta_tilde[7]  -1.26  0.38  1.91  0.36 0.96     1     4977     3112
+theta_tilde[8]  -1.52  0.07  1.64  0.07 0.96     1     5209     3039
+theta[1]        -1.73  5.67 15.98  6.13 5.53     1     4803     3138
+theta[2]        -2.50  4.87 12.61  4.94 4.56     1     5830     3692
+theta[3]        -4.28  4.21 11.75  4.03 5.08     1     4702     3378
+theta[4]        -2.70  4.80 12.40  4.78 4.75     1     5451     3472
+theta[5]        -3.95  4.02 10.82  3.76 4.62     1     5179     3486
+theta[6]        -4.22  4.31 11.42  4.08 4.93     1     5537     3372
+theta[7]        -1.04  6.01 15.22  6.37 5.07     1     5121     3569
+theta[8]        -3.13  4.90 13.09  4.95 5.19     1     5124     3452
+lp__           -11.02 -6.52 -3.62 -6.83 2.31     1     1850     2629
+
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
+per chain is considered good), and Rhat is the potential scale reduction 
+factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
+<div id="plot-of-r-hatx-4" class="section level4" number="3.3.2.1">
+<h4 number="3.3.2.1"><span class="header-section-number">3.3.2.1</span> Plot of R-hat(x)</h4>
+<pre class="r"><code>chains &lt;- as.array(fit_ncp2)
+dim_chains &lt;- dim(chains)
+
+simulated_rhat = all_local_rhat(chains[, , &quot;tau&quot;], max_nb_points = &quot;ALL&quot;)
+
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat, 
+             col=c(colors[3], colors[2]), xlabels = xlabels,
+             xlim = c(0,25), ylim=c(0.999,1.04), title =&quot;&quot;)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-39-1.png" width="1152" /></p>
+</div>
+<div id="repetitions-comparison-of-different-r-hat-4" class="section level4" number="3.3.2.2">
+<h4 number="3.3.2.2"><span class="header-section-number">3.3.2.2</span> Repetitions: comparison of different R-hat</h4>
+<pre class="r"><code>gen_ncp_eight_school &lt;- function(i){
+  # fit_ncp2 &lt;- stan(
+  #   file = paste(stan_folder, &quot;eight_schools_ncp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
+  #   iter = 2000, chains = 4, refresh = 0,
+  #   control = list(adapt_delta = 0.95)
+  # )
+  # saveRDS(fit_ncp2, paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  fit_ncp2 &lt;- readRDS(paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
+  mon &lt;- monitor(fit_ncp2)
+  chains &lt;- as.array(fit_ncp2)
+
+  return (chains[, , &quot;tau&quot;])
+}
+
+r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
+r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
+r_colors &lt;- c(colors[4], colors[5], colors[3])
+
+R_matrix_8schools2 &lt;- repetitions_R(chains_func = gen_ncp_eight_school, 
+                         r_func = r_functions, 
+                         r_names = r_names, 
+                         reps = reps,
+                         saved_model = TRUE)
+
+xlabels = c(1, 1.005, 1.01, 1.015, 1.02, 1.025, 1.03)
+plot_hist(R_matrix_8schools2, colors = r_colors, xlabels = xlabels,
+          bin_size = 0.0015, lim_y_axis = reps)</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-40-1.png" width="1152" /></p>
+<pre class="r"><code>data=data.frame(r_version, r_experiment,  r_values)
+
+ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
+    geom_boxplot() + 
+    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
+               color = &quot;black&quot;, size=0.5) +
+    xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;) + ylim(1, 1.3)</code></pre>
+<pre><code>Warning: Removed 373 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="Simulations_files/figure-html/unnamed-chunk-42-1.png" width="1152" /></p>
+</div>
+</div>
 </div>
 </div>
 
