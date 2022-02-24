@@ -117,14 +117,18 @@ For each example we keep a constant number of i.i.d samples ($nm=400$)
 For $m=2$, $1.01$ is an adapted threshold:
 
 ```{r same_uniform_hists1, warning=FALSE}
+sigma <- 1
+alpha <- 0.8
+eta <- 1
+
 M <- 2
 N <- 200
 
 uniform_rdists <- c((function(n) runif(n, -sigma, sigma)),
                     (function(n) runif(n, -sigma, sigma)))
 
-pareto_rdists <- c((function(n) rpareto(n, location = etaM, shape = alpha)),
-                   (function(n) rpareto(n, location = etaM, shape = alpha)))
+pareto_rdists <- c((function(n) rpareto(n, location = eta, shape = alpha)),
+                   (function(n) rpareto(n, location = eta, shape = alpha)))
 
 colors_same <- c(rgb(0.55, 0, 0.4, 0.8), rgb(0.4, 0, 0.7, 0.8), rgb(0.5, 0, 0.5, 0.9))
 
@@ -704,7 +708,7 @@ plot_hist(R_matrix, colors = r_colors, bin_size = 0.0045,
 
 ### Evolution of the different value of $\hat{R}$ with $\rho$
 
-Except for $R^*$, we consider the mean of the 100 draws for the different 
+We consider the mean of 10 draws for the different 
 versions of $\hat{R}$, and plot the evolution of this value with $\rho$:
 
 ```{r bivariate_rho, warning=FALSE}
@@ -749,7 +753,7 @@ plot(x=x_val, y=R_values[,1],
      xaxt = "n", yaxt = "n",
      cex.lab = 2, cex.main = 2,
      lwd=9,
-     xlim = c(-1.01, 1.02), ylim = c(0.999,1.155))
+     xlim = c(-1.01, 1.02), ylim = c(0.999,1.105))
 points(x=x_val, y=R_values[,2], 
        col = c(colors[4]), pch = 19,
        lwd=9)
@@ -757,7 +761,7 @@ lines(rho_list, theoretical_R, type="l", col = colors[2], lwd=6, lty = 2)
 points(x=rho_list, y=theoretical_R, 
        col = c(colors[2]), pch = 19,
        lwd=9)
-xlabels = c(1, 1.03, 1.06, 1.09, 1.12, 1.15)
+xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
 ylabels = c(-1, -0.5, 0, 0.5, 1)
 axis(1, labels=ylabels, at=ylabels, cex.axis=2, lwd=3, mgp = c(1,1,0))
 axis(2, labels=xlabels, at=xlabels, cex.axis=2, mgp = c(1,0.5,0), lwd=2)
@@ -770,11 +774,10 @@ legend(x=0.6, y=1.14, col=c(colors[4], colors[3], colors[2]), pch=19,
 Remarks : 
 
 - Our version is the most sensitive, and is more sensitive as $|\rho|$ increases
-(which is great)
 - The asymmetry can be link to the theoretical computations.
-WARNING: in the case where $d=2$, the orders on the two bounds PQD and NQD are 
+WARNING: in the case where $d=2$, the orders on the two bounds PLOD and NLOD are 
 inverted (compared to the asymptotic behavior), and that is why here we are 
-more sensitive when $\rho < 0$ (which is counter-intuitive)
+more sensitive when $\rho < 0$.
 
 
 ## General number of dimensions
@@ -939,12 +942,15 @@ ggplot(R_df, aes(x = Values, y = as.factor(Dim), fill = Nb_Dir)) +
 
 ```
 
-(WARNING: $d>6$ the chunk is very dangerous to run!!)
 
-## Logistic regression
+## Bayesian logistic regression
 
 As a practical bayesian example, we consider hierarchical logistic regression using 
 the following model:
+\begin{equation*}
+    \boldsymbol{\beta} \sim \mathcal{N}(0, 0.35^2. \boldsymbol{I}_4), \quad
+    y_j \sim \text{Bernoulli}\left(\frac{1}{1+e^{-\boldsymbol{x}_j^\top\boldsymbol{\beta}}}\right).
+\end{equation*}
 
 ```{r, warning=FALSE}
 writeLines(readLines(paste(stan_folder, "logit_reg.stan", sep="")))
@@ -973,16 +979,12 @@ for (i in 1:dim_chains[3]) {
 }
 
 mon[["Rhat_inf"]] <- rhat_inf
-
 mon
-summary(mon[1:d, 'Rhat'])
-summary(mon[1:d, 'Rhat_inf'])
-
-mon[d+1, "Rhat_inf"]
-
-perm_chains <- aperm(chains, c(1,3,2))
-rhat_infinity_max_directions(perm_chains)
 ```
+
+
+Despite a low number of iterations, all the different univariate $\hat{R}_\infty$ are mostly below $1.02$ when replicated, and the rank-$\hat{R}$ are below $1.01$.
+We compare the proportion of $\hat{R}^{(\text{max})}_\infty$ replications over $1.03$, with the proportion of univariate $\hat{R}_\infty$ for lp__ over $1.02$:
 
 ```{r, warning=FALSE}
 reps <- 50
@@ -1042,11 +1044,23 @@ plot_hist(R_matrix_logit2, colors = r_colors, vaxis_pos = 0.998,
           bin_size = 0.003, lim_y_axis = 25)
 ```
 
+Both diagnostic looks similar: although most of simulations seems satisfying, a 
+non-negligible part of replications seems to suffer from a lack of convergence.
 
 # Empirical examples
 
+This section is dedicated to practical case for Bayesian inference.
+
 ## Autoregressive model
 
+We start by running a basic autoreggressive model to study the case of a Markov chain
+with different variance on the chains:
+\begin{equation*}
+  \theta^{(i+1,j)} = \rho \theta^{(i,j)} + \epsilon_{i,j}, 
+  \quad \text{with} \quad
+  \epsilon_{i,j} \sim \mathcal{N}(0,\sigma^2_j),
+\end{equation*}
+where $\rho \in (0,1)$ and $\sigma_j > 0$.
 
 ```{r}
 autoregressive <- function(n, rho, sigma){
@@ -1068,7 +1082,8 @@ gen_autoreg_chains <- function(M, N, rho, sigma, sigmaM){
 
 ```
 
-### Plot of R-hat(x)
+
+Clearly $\hat{R}_\infty$ diagnose a convergence issue:
 
 ```{r}
 
@@ -1090,7 +1105,7 @@ plot_local_r(chains, simulated_rhat, col=c(colors[3], colors[2]),
              xlim = c(-6,6), ylim=c(1,1.07), title ="")
 ```
 
-### Repetitions: comparison of different R-hat
+Comparison of different versions of $\hat{R}$ using replications:
 
 ```{r autoreg_hist, warning=FALSE}
 
@@ -1122,11 +1137,15 @@ r_values <- c(r_values, as.vector(R_matrix_autoreg))
 ## HMC on Cauchy distribution
 
 In this section, we will study two parameterization of Cauchy using HMC:
-- Nominal parameterization which is a direct one.
-- Alternative parameterization which is a scale mixture of Gaussians.
+\begin{tabular}{ll}
+  \textbf{Example~\ref{fig:cauchy}.a:} & Nominal parameterisation \\[0.1cm]
+  & $x_j \sim \text{Cauchy}(0,1), \quad j\in \{1, \ldots, 50\}$.\\[0.2cm]
+  \textbf{Example~\ref{fig:cauchy}.b:} & Alternative parameterisation \\[0.1cm]
+   & $x_j = a_j / \sqrt{b_j}$,\quad $a_j \sim \mathcal{N}(0,1),\quad b_j \sim \chi^2_1$.\\[0.2cm]
+\end{tabular}
 
-To study these two parametrizations we will use rank plots which illustrate a mixing problem if they are not uniform. First we will look for an element of the vector for which our $\hat R$ is one of the highest. Here we want rather to study the tail of the distribution than the bulk because of the thick tail of the Cauchy distribution. Finally, we will use the rank plots of this element found to know if we have a mixing problem or not.
-
+One would expect convergence issues with the nominal parameterisation and not with the alternative one.
+For both, the process of selecting the worst parameters among the $50$ ones is iterated for the generation of replications.
 
 ### Nominal parameterization
 
@@ -1150,7 +1169,8 @@ max_rhat <- max(mon[1:50, 'Rhat'])
 subset(mon, Rhat == max_rhat)
 ```
 
-#### Plot of R-hat(x)
+Plot of $\hat{R}(x)$:
+
 
 ```{r, warning=FALSE}
 chains <- as.array(fit_nom)
@@ -1183,8 +1203,7 @@ plot_local_r(chains[ , , which_max_rhat_inf], simulated_rhat,
 ```
 
 
-#### Repetitions: comparison of different R-hat
-
+Comparison of different versions of $\hat{R}$ using replications:
 
 ```{r, warning=FALSE}
 
@@ -1257,7 +1276,7 @@ subset(mon, Rhat == max_rhat)
 
 ```
 
-#### Plot of R-hat(x)
+Plot of $\hat{R}(x)$:
 
 ```{r, warning=FALSE}
 chains <- as.array(fit_alt1)
@@ -1288,7 +1307,7 @@ plot_local_r(chains[, , which_max_rhat], simulated_rhat,
              xlim = c(-4,4), ylim=c(0.9995,1.03), title ="")
 ```
 
-#### Repetitions: comparison of different R-hat
+Comparison of different versions of $\hat{R}$ using replications:
 
 
 ```{r, warning=FALSE}
@@ -1349,7 +1368,18 @@ writeLines(readLines(paste(stan_folder, "eight_schools_cp.stan", sep="")))
 
 ### Centered Eight Schools model
 
-We will proceed in the same way as the case of the Cauchy distribution concerning the rank plots, but this time we will focus on the parameter $\tau$. And our choice is due to the fact that the distribution becomes more centralized on the population mean when faced with the small values of the population standard deviation $\tau$, which makes it difficult to explore this distribution by MCMC chains.
+As a classical Bayesian example, we consider using HMC on a hierarchical Bayesian model and in particular the eight-school, 
+where two parameterisations are possible to model the problem:
+\begin{tabular}{ll}
+    \textbf{Example~\ref{fig:hierarchical}.a:} & Centered parameterisation (CP) \\[0.1cm]
+    & $\theta_j \sim \mathcal{N}(\mu,\tau), \quad 
+    y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$.\\[0.2cm]
+    \textbf{Example~\ref{fig:hierarchical}.b:} & Non-centered parameterisation (NCP) \\[0.1cm]
+    & $\bar{\theta}_j \sim \mathcal{N}(0,1), \quad 
+    \theta_j = \mu + \tau \bar{\theta}_j, \quad y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$.\\[0.2cm]
+\end{tabular}
+
+Similarly to Vehtari et al. (2021), we analyse convergence of the chains by studying parameter $\tau$.
 
 ```{r, warning=FALSE}
 eight_schools <- read_rdump(paste(stan_folder, "eight_schools.data.R", sep=""))
@@ -1364,7 +1394,8 @@ fit_cp <- readRDS(paste(stan_folder, "eight_schools_fits/eight_schools_cp.rds", 
 mon <- monitor(fit_cp)
 print(mon)
 ```
-#### Plot of R-hat(x)
+
+Plot of $\hat{R}(x)$
 
 ```{r, warning=FALSE}
 chains <- as.array(fit_cp)
@@ -1379,7 +1410,8 @@ plot_local_r(chains[, , "tau"], simulated_rhat,
              xlim = c(0,25), ylim=c(0.999,1.04), title ="")
 ```
 
-#### Repetitions: comparison of different R-hat
+
+Comparison of different versions of $\hat{R}$ using replications:
 
 
 ```{r, warning=FALSE}
@@ -1447,7 +1479,7 @@ mon <- monitor(fit_ncp2)
 print(mon)
 ```
 
-#### Plot of R-hat(x)
+Plot of $\hat{R}(x)$:
 
 ```{r, warning=FALSE}
 chains <- as.array(fit_ncp2)
@@ -1461,7 +1493,9 @@ plot_local_r(chains[, , "tau"], simulated_rhat,
              xlim = c(0,25), ylim=c(0.999,1.04), title ="")
 ```
 
-#### Repetitions: comparison of different R-hat
+
+Comparison of different versions of $\hat{R}$ using replications:
+
 
 ```{r, warning=FALSE}
 

@@ -257,16 +257,100 @@ source(paste(r_folder, &quot;import/monitornew.R&quot;, sep=&quot;&quot;))
 source(paste(r_folder, &quot;import/r_star_monitor.R&quot;, sep=&quot;&quot;))
 
 reps &lt;- 500</code></pre>
-<p><span class="math display">\[\begin{equation}
+<p>This notebook is a supplementary material of the paper “On the use of local <span class="math inline">\(\hat{R}\)</span> to improve MCMC convergence diagnostic”. It illustrates the use of a localized version of the Gelman-Rubin diagnostic (commonly named <span class="math inline">\(\hat{R}\)</span>) on various examples. This local version <span class="math inline">\(\hat{R}(x)\)</span> has a population counterpart which can be written <span class="math display">\[\begin{equation}
     \label{eq:R_theorique}
     R(x) = \sqrt{\frac{W(x)+B(x)}{W(x)}} = \sqrt{1 + \frac{\sum_{j=1}^m\sum_{k=j+1}^m \left(F_j(x)-F_k(x)\right)^2}{m\sum_{j=1}^m F_j(x)(1-F_j(x))}}.
-\end{equation}\]</span></p>
+\end{equation}\]</span> In addition to the <span class="math inline">\(\hat{R}(x)\)</span> and <span class="math inline">\(R(x)\)</span> curves, we suggest to use <span class="math inline">\(R_\infty = \sup_{x \in\mathbb{R}} R(x)\)</span> as a scalar summary.</p>
+<p>This notebook includes most of the examples used in the article plus others, showing how the figures were generated. Section 1 concerns some toy examples (Section 2.5 in the paper), Section 2 the multivariate extension (Section 3 in the paper), and Section 3 the applications to Bayesian inference (Section 4 in the paper).</p>
+<p>The code that is used is also available online (<a href="https://github.com/TheoMoins/localrhat" class="uri">https://github.com/TheoMoins/localrhat</a>).</p>
 <div id="known-distributions-on-the-chains" class="section level1" number="1">
 <h1 number="1"><span class="header-section-number">1</span> Known distributions on the chains</h1>
-<div id="counter-examples-for-hatr" class="section level2" number="1.1">
-<h2 number="1.1"><span class="header-section-number">1.1</span> Counter examples for <span class="math inline">\(\hat{R}\)</span></h2>
-<div id="example-i-uniform-distribution" class="section level3" number="1.1.1">
-<h3 number="1.1.1"><span class="header-section-number">1.1.1</span> Example (i): Uniform distribution</h3>
+<p>We start by illustrate the choice of threshold for <span class="math inline">\(\hat{R}_\infty\)</span> depending on the number of chains.</p>
+<div id="threshold-estimation" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Threshold estimation</h2>
+<p>In this part we focus on the case where all the distributions are the same, to verify the behavior in the null hypothesis and estimate the type I error at <span class="math inline">\(5\%\)</span>. This value will be used as a threshold to determine whether or not the chains follows the same distribution (i.e. convergence is reached). For each example we keep a constant number of i.i.d samples (<span class="math inline">\(nm=400\)</span>)</p>
+<p>For <span class="math inline">\(m=2\)</span>, <span class="math inline">\(1.01\)</span> is an adapted threshold:</p>
+<pre class="r"><code>sigma &lt;- 1
+alpha &lt;- 0.8
+eta &lt;- 1
+
+M &lt;- 2
+N &lt;- 200
+
+uniform_rdists &lt;- c((function(n) runif(n, -sigma, sigma)),
+                    (function(n) runif(n, -sigma, sigma)))
+
+pareto_rdists &lt;- c((function(n) rpareto(n, location = eta, shape = alpha)),
+                   (function(n) rpareto(n, location = eta, shape = alpha)))
+
+colors_same &lt;- c(rgb(0.55, 0, 0.4, 0.8), rgb(0.4, 0, 0.7, 0.8), rgb(0.5, 0, 0.5, 0.9))
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(rhat_infinity),
+                                    r_names = c(&quot;Uniform&quot;),
+                                    reps = reps)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(rhat_infinity),
+                                   r_names = c(&quot;Pareto&quot;),
+                                   reps = reps)
+
+R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
+
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
+          threshold = 1.01001, xlabels = xlabels, bin_size = 0.0020, 
+          lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
+<p><img src="Simulations_files/figure-html/same_uniform_hists1-1.png" width="1152" /></p>
+<p>For <span class="math inline">\(m=4\)</span>, <span class="math inline">\(1.01\)</span> may be too strong and <span class="math inline">\(1.02\)</span> seems more reasonable:</p>
+<pre class="r"><code>M &lt;- 4
+N &lt;- 100
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(rhat_infinity),
+                                    r_names = c(&quot;Uniform&quot;),
+                                    reps = reps)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(rhat_infinity),
+                                   r_names = c(&quot;Pareto&quot;),
+                                   reps = reps)
+
+R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
+
+
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
+          xlabels = xlabels, bin_size = 0.002, threshold = 1.02,
+          lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
+<p><img src="Simulations_files/figure-html/same_uniform_hists2-1.png" width="1152" /></p>
+<p>This increases persists as the number of chains increase, typically <span class="math inline">\(1.03\)</span> should be considered when <span class="math inline">\(m=8\)</span>:</p>
+<pre class="r"><code>M &lt;- 8
+N &lt;- 50
+
+R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                                    r_func = c(rhat_infinity),
+                                    r_names = c(&quot;Uniform&quot;),
+                                    reps = reps)
+
+R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                                   r_func = c(rhat_infinity),
+                                   r_names = c(&quot;Pareto&quot;),
+                                   reps = reps)
+
+R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
+
+xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
+plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
+          threshold = 1.03, xlabels = xlabels, bin_size = 0.002, 
+          lim_y_axis = 200, vaxis_pos = 0.9985)</code></pre>
+<p><img src="Simulations_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
+</div>
+<div id="counter-examples-for-hatr" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Counter examples for <span class="math inline">\(\hat{R}\)</span></h2>
+<p>We consider two cases where <span class="math inline">\(\hat{R}\)</span> is not able to detect a convergence failure, and a then some examples where the improvement rank-<span class="math inline">\(\hat{R}\)</span> also fails.</p>
+<div id="example-i-uniform-distribution" class="section level3" number="1.2.1">
+<h3 number="1.2.1"><span class="header-section-number">1.2.1</span> Example (i): Uniform distribution</h3>
 <p>As a first example we consider <span class="math inline">\(m\)</span> chains following centered uniform distributions, with the last having a different support than the other: <span class="math display">\[\begin{align*}
   F_1(x) &amp;= \cdots = F_{m-1}(x) =  \frac{x}{2\sigma} + \frac{1}{2}, \quad \forall x \in \left[-\sigma; \sigma\right],\\
   \text{and}\quad F_m(x) &amp;=  \frac{x}{2\sigma_m} + \frac{1}{2}, \quad \forall x \in \left[-\sigma_m; \sigma_m\right].
@@ -290,10 +374,10 @@ chains = gen_chains(M, N, uniform_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0617
+Local R-hat obtained:  1.0593
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.061693</code></pre>
+<pre><code>[1] 1.059289</code></pre>
 <pre class="r"><code>simulated_rhat = all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
@@ -321,8 +405,8 @@ plot_hist(R_matrix_unif, colors = r_colors, xlabels = xlabels,
 <p><img src="Simulations_files/figure-html/uniform_hist-1.png" width="1152" /></p>
 <p>As constructed initially by Vehtari et al. (2021), this example fool the original <span class="math inline">\(\hat{R}\)</span>. The rank version and <span class="math inline">\(\hat{R}_\infty\)</span> is on the contrary robust in this case.</p>
 </div>
-<div id="example-ii-pareto-distribution" class="section level3" number="1.1.2">
-<h3 number="1.1.2"><span class="header-section-number">1.1.2</span> Example (ii): Pareto distribution</h3>
+<div id="example-ii-pareto-distribution" class="section level3" number="1.2.2">
+<h3 number="1.2.2"><span class="header-section-number">1.2.2</span> Example (ii): Pareto distribution</h3>
 <p>Similarly, we check the second counter-example that fool the original <span class="math inline">\(\hat{R}\)</span>: chains with heavy-tails and different locations. To do so we consider Pareto distributions on the chains: <span class="math display">\[\begin{align*}
     F_1(x) &amp;= \cdots = F_{m-1}(x) = 1 - \left({x}/{\eta}\right)^{-\alpha},
     \quad \forall x \in [\eta, +\infty),\\
@@ -349,10 +433,10 @@ chains &lt;- gen_chains(M, N, pareto_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0416
+Local R-hat obtained:  1.058
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.04161</code></pre>
+<pre><code>[1] 1.058045</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 plot_local_r(chains, simulated_rhat, theoretical_r_values,
@@ -375,11 +459,11 @@ plot_hist(R_matrix_pareto, colors = r_colors, xlabels = xlabels,
 <p><img src="Simulations_files/figure-html/pareto_hists-1.png" width="1152" /></p>
 </div>
 </div>
-<div id="counter-examples-for-rank-hatr" class="section level2" number="1.2">
-<h2 number="1.2"><span class="header-section-number">1.2</span> Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></h2>
+<div id="counter-examples-for-rank-hatr" class="section level2" number="1.3">
+<h2 number="1.3"><span class="header-section-number">1.3</span> Counter examples for rank-<span class="math inline">\(\hat{R}\)</span></h2>
 <p>In this part, We will see 3 cases where rank-<span class="math inline">\(\hat{R}\)</span> doesn’t manage to detect the convergence issue. These cases correspond to chains with different type of distributions, but with same mean and mean over the median.</p>
-<div id="example-iii-uniform-and-laplace-distributions" class="section level3" number="1.2.1">
-<h3 number="1.2.1"><span class="header-section-number">1.2.1</span> Example (iii): Uniform and Laplace distributions</h3>
+<div id="example-iii-uniform-and-laplace-distributions" class="section level3" number="1.3.1">
+<h3 number="1.3.1"><span class="header-section-number">1.3.1</span> Example (iii): Uniform and Laplace distributions</h3>
 <p>We start by an example where the population version can be computed explicitly: if one chain is uniformly distributed <span class="math inline">\(\mathcal{U}(-2\sigma, 2\sigma)\)</span> and another one from a Laplace distribution <span class="math inline">\(\mathcal{L}(0, \sigma)\)</span>, where <span class="math inline">\(\sigma&gt;0\)</span>, then calculations leads to <span class="math inline">\(R_\infty \approx 1.018\)</span>, which means convergence issue.</p>
 <pre class="r"><code>sigma &lt;- 1/4
 M &lt;- 2
@@ -401,10 +485,10 @@ chains &lt;- gen_chains(M, N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0201
+Local R-hat obtained:  1.023
 p-value:  0.003
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.020069</code></pre>
+<pre><code>[1] 1.02296</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.01, 1.02, 1.03)
@@ -430,8 +514,8 @@ plot_hist(R_matrix_lapl_unif, colors = r_colors, bin_size = 0.003,
           lim_y_axis = reps, vaxis_pos = 0.9985)</code></pre>
 <p><img src="Simulations_files/figure-html/laplace_uniform_hists-1.png" width="1152" /></p>
 </div>
-<div id="example-iv-uniform-and-normal-distributions" class="section level3" number="1.2.2">
-<h3 number="1.2.2"><span class="header-section-number">1.2.2</span> Example (iv): Uniform and Normal distributions</h3>
+<div id="example-iv-uniform-and-normal-distributions" class="section level3" number="1.3.2">
+<h3 number="1.3.2"><span class="header-section-number">1.3.2</span> Example (iv): Uniform and Normal distributions</h3>
 <p>Similarly, others distributions are possible to build counter-examples. Consider <span class="math inline">\(m-1\)</span> normal chains <span class="math inline">\(\mathcal{N}\left(0, \frac{\pi}{2}\sigma^2\right)\)</span> and for the last one a uniform <span class="math inline">\(\mathcal{U}(-2\sigma, 2\sigma)\)</span>:</p>
 <pre class="r"><code>sigma &lt;- 1/2
 M &lt;- 2
@@ -449,10 +533,10 @@ chains &lt;- gen_chains(M, 2*N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0186
+Local R-hat obtained:  1.0208
 p-value:  0.003
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.018643</code></pre>
+<pre><code>[1] 1.020787</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.005, 1.01, 1.015, 1.02)
@@ -477,8 +561,8 @@ plot_hist(R_matrix_norm_unif, colors = r_colors, xlabels = xlabels,
           lim_y_axis = reps, vaxis_pos = 0.999)</code></pre>
 <p><img src="Simulations_files/figure-html/gaussian_uniform_hists-1.png" width="1152" /></p>
 </div>
-<div id="example-v-uniform-and-exponential-distributions" class="section level3" number="1.2.3">
-<h3 number="1.2.3"><span class="header-section-number">1.2.3</span> Example (v): Uniform and Exponential distributions</h3>
+<div id="example-v-uniform-and-exponential-distributions" class="section level3" number="1.3.3">
+<h3 number="1.3.3"><span class="header-section-number">1.3.3</span> Example (v): Uniform and Exponential distributions</h3>
 <p>Finally, it is also possible to mix uniform distributions with exponential:</p>
 <pre class="r"><code>M &lt;- 4
 N &lt;- 200
@@ -499,10 +583,10 @@ rdists &lt;- c((function(n) rexp(n)),
 chains &lt;- gen_chains(M, N, rdists)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0666
+Local R-hat obtained:  1.0617
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.066571</code></pre>
+<pre><code>[1] 1.061693</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
@@ -524,79 +608,6 @@ plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.007,
 <p><img src="Simulations_files/figure-html/exp_uniform_hists-1.png" width="1152" /></p>
 </div>
 </div>
-<div id="threshold-estimation" class="section level2" number="1.3">
-<h2 number="1.3"><span class="header-section-number">1.3</span> Threshold estimation</h2>
-<p>In this part we focus on the case where all the distributions are the same, to verify the behavior in the null hypothesis.</p>
-<pre class="r"><code>M &lt;- 2
-N &lt;- 200
-
-uniform_rdists &lt;- c((function(n) runif(n, -sigma, sigma)),
-                    (function(n) runif(n, -sigma, sigma)))
-
-pareto_rdists &lt;- c((function(n) rpareto(n, location = etaM, shape = alpha)),
-                   (function(n) rpareto(n, location = etaM, shape = alpha)))
-
-colors_same &lt;- c(rgb(0.55, 0, 0.4, 0.8), rgb(0.4, 0, 0.7, 0.8), rgb(0.5, 0, 0.5, 0.9))
-
-R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
-                                    r_func = c(rhat_infinity),
-                                    r_names = c(&quot;Uniform&quot;),
-                                    reps = reps)
-
-R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
-                                   r_func = c(rhat_infinity),
-                                   r_names = c(&quot;Pareto&quot;),
-                                   reps = reps)
-
-R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
-
-xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
-plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
-          threshold = 1.01001, xlabels = xlabels, bin_size = 0.0020, 
-          lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
-<p><img src="Simulations_files/figure-html/same_uniform_hists1-1.png" width="1152" /></p>
-<pre class="r"><code>M &lt;- 4
-N &lt;- 100
-
-R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
-                                    r_func = c(rhat_infinity),
-                                    r_names = c(&quot;Uniform&quot;),
-                                    reps = reps)
-
-R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
-                                   r_func = c(rhat_infinity),
-                                   r_names = c(&quot;Pareto&quot;),
-                                   reps = reps)
-
-R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
-
-
-xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
-plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
-          xlabels = xlabels, bin_size = 0.002, threshold = 1.02,
-          lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
-<p><img src="Simulations_files/figure-html/same_uniform_hists2-1.png" width="1152" /></p>
-<pre class="r"><code>M &lt;- 8
-N &lt;- 50
-
-R_matrix_same_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
-                                    r_func = c(rhat_infinity),
-                                    r_names = c(&quot;Uniform&quot;),
-                                    reps = reps)
-
-R_matrix_same_par &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
-                                   r_func = c(rhat_infinity),
-                                   r_names = c(&quot;Pareto&quot;),
-                                   reps = reps)
-
-R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
-
-xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
-plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
-          threshold = 1.03, xlabels = xlabels, bin_size = 0.002, 
-          lim_y_axis = 200, vaxis_pos = 0.9985)</code></pre>
-<p><img src="Simulations_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
-</div>
 <div id="summary" class="section level2" number="1.4">
 <h2 number="1.4"><span class="header-section-number">1.4</span> Summary</h2>
 <pre class="r"><code>data=data.frame(r_version, r_experiment,  r_values)
@@ -615,6 +626,7 @@ ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
 <h1 number="2"><span class="header-section-number">2</span> Multivariate examples</h1>
 <p>In the multivariate case when <span class="math inline">\(\boldsymbol{\theta}=(\theta_1, \ldots, \theta_d)\in{\mathbb R}^d\)</span>, we suggest to apply <span class="math inline">\(\hat{R}\)</span> on a multivariate indicator variable <span class="math inline">\(I_{\boldsymbol{x}}^{(j)} = \mathbb{I}\{\theta_1^{(j)} \leq x_1, \ldots, \theta_d^{(j)} \leq x_d\}\)</span> for any <span class="math inline">\(\boldsymbol{x} = (x_1, \ldots, x_d) \in \mathbb{R}^d\)</span> in two steps:</p>
 <p>Thus we recommend to compute the multivariate version only in the case where all the univariate one doesn’t detect any convergence issue, this is why in the part we will focus only of cases where the margins are the same (for example uniform).</p>
+<p>Additional experiments on different copulas using Open TURNS can be found here: <a href="https://theomoins.github.io/localrhat/Simulations_ot.html" class="uri">https://theomoins.github.io/localrhat/Simulations_ot.html</a></p>
 <pre class="r"><code>library(&quot;MASS&quot;) # For Multivariate Normal Distribution
 library(&quot;stableGR&quot;) # For the R-hat version of Vats and Knudson (2018)
 library(&quot;coda&quot;) # For an implementation of the multivariate R-hat of Brooks and Gelman (1998)
@@ -655,10 +667,10 @@ N &lt;- 200
 chains &lt;- gen_bvnormal_chains(M, N, rho)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0308
-p-value:  0.001
+Local R-hat obtained:  1.0458
+p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.030759</code></pre>
+<pre><code>[1] 1.045842</code></pre>
 <p>We simulate 100 experiments, which result as 100 draws of the different <span class="math inline">\(\hat{R}\)</span>.</p>
 <p>Histogram of the corresponding values of <span class="math inline">\(\hat{R}_\infty\)</span> and the multivariate <span class="math inline">\(\hat{R}\)</span> of Brooks and Gelman (1998) :</p>
 <pre class="r"><code>rho &lt;- 0.9
@@ -682,7 +694,7 @@ plot_hist(R_matrix, colors = r_colors, bin_size = 0.0045,
 <p><img src="Simulations_files/figure-html/bivariate_hists2-1.png" width="1152" /></p>
 <div id="evolution-of-the-different-value-of-hatr-with-rho" class="section level3" number="2.1.1">
 <h3 number="2.1.1"><span class="header-section-number">2.1.1</span> Evolution of the different value of <span class="math inline">\(\hat{R}\)</span> with <span class="math inline">\(\rho\)</span></h3>
-<p>Except for <span class="math inline">\(R^*\)</span>, we consider the mean of the 100 draws for the different versions of <span class="math inline">\(\hat{R}\)</span>, and plot the evolution of this value with <span class="math inline">\(\rho\)</span>:</p>
+<p>We consider the mean of 10 draws for the different versions of <span class="math inline">\(\hat{R}\)</span>, and plot the evolution of this value with <span class="math inline">\(\rho\)</span>:</p>
 <pre class="r"><code>rho_list = c(-0.99, -0.9, -0.7, -0.5, -0.2, 0, 0.2, 0.5, 0.7, 0.9, 0.99)
 
 d &lt;- 2
@@ -723,7 +735,7 @@ plot(x=x_val, y=R_values[,1],
      xaxt = &quot;n&quot;, yaxt = &quot;n&quot;,
      cex.lab = 2, cex.main = 2,
      lwd=9,
-     xlim = c(-1.01, 1.02), ylim = c(0.999,1.155))
+     xlim = c(-1.01, 1.02), ylim = c(0.999,1.105))
 points(x=x_val, y=R_values[,2], 
        col = c(colors[4]), pch = 19,
        lwd=9)
@@ -731,7 +743,7 @@ lines(rho_list, theoretical_R, type=&quot;l&quot;, col = colors[2], lwd=6, lty =
 points(x=rho_list, y=theoretical_R, 
        col = c(colors[2]), pch = 19,
        lwd=9)
-xlabels = c(1, 1.03, 1.06, 1.09, 1.12, 1.15)
+xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
 ylabels = c(-1, -0.5, 0, 0.5, 1)
 axis(1, labels=ylabels, at=ylabels, cex.axis=2, lwd=3, mgp = c(1,1,0))
 axis(2, labels=xlabels, at=xlabels, cex.axis=2, mgp = c(1,0.5,0), lwd=2)
@@ -742,8 +754,8 @@ legend(x=0.6, y=1.14, col=c(colors[4], colors[3], colors[2]), pch=19,
 <p><img src="Simulations_files/figure-html/bivariate_rho-1.png" width="1152" /></p>
 <p>Remarks :</p>
 <ul>
-<li>Our version is the most sensitive, and is more sensitive as <span class="math inline">\(|\rho|\)</span> increases (which is great)</li>
-<li>The asymmetry can be link to the theoretical computations. WARNING: in the case where <span class="math inline">\(d=2\)</span>, the orders on the two bounds PQD and NQD are inverted (compared to the asymptotic behavior), and that is why here we are more sensitive when <span class="math inline">\(\rho &lt; 0\)</span> (which is counter-intuitive)</li>
+<li>Our version is the most sensitive, and is more sensitive as <span class="math inline">\(|\rho|\)</span> increases</li>
+<li>The asymmetry can be link to the theoretical computations. WARNING: in the case where <span class="math inline">\(d=2\)</span>, the orders on the two bounds PLOD and NLOD are inverted (compared to the asymptotic behavior), and that is why here we are more sensitive when <span class="math inline">\(\rho &lt; 0\)</span>.</li>
 </ul>
 </div>
 </div>
@@ -785,12 +797,12 @@ r_colors &lt;- c(colors[3], colors[4])
 
 S &lt;- generate_sigma_matrix(d)
 print(S)</code></pre>
-<pre><code>            [,1]        [,2]        [,3]       [,4]       [,5]
-[1,]  1.00000000 -0.01650453 -0.76513638  0.1333087  0.3563378
-[2,] -0.01650453  1.00000000 -0.07924185  0.7074565  0.4977615
-[3,] -0.76513638 -0.07924185  1.00000000 -0.5369093 -0.4625888
-[4,]  0.13330868  0.70745650 -0.53690931  1.0000000  0.7853580
-[5,]  0.35633782  0.49776155 -0.46258879  0.7853580  1.0000000</code></pre>
+<pre><code>            [,1]        [,2]       [,3]       [,4]       [,5]
+[1,]  1.00000000  0.07855007 -0.3445776 -0.3730948 -0.6401376
+[2,]  0.07855007  1.00000000  0.2227151 -0.8153404 -0.4443801
+[3,] -0.34457756  0.22271506  1.0000000  0.3447988 -0.3072494
+[4,] -0.37309479 -0.81534039  0.3447988  1.0000000  0.4128768
+[5,] -0.64013763 -0.44438014 -0.3072494  0.4128768  1.0000000</code></pre>
 <pre class="r"><code>R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d, S)), 
                          r_func = r_functions, 
                          r_names = r_names, 
@@ -872,12 +884,14 @@ ggplot(R_df, aes(x = Values, y = as.factor(Dim), fill = Nb_Dir)) +
   scale_fill_manual(values=c(&quot;#32a632&quot;, &quot;#4287f5&quot;)) +
   theme_ridges(font_size=22)</code></pre>
 <p><img src="Simulations_files/figure-html/r_dimensions-1.png" width="1152" /></p>
-<p>(WARNING: <span class="math inline">\(d&gt;6\)</span> the chunk is very dangerous to run!!)</p>
 </div>
 </div>
-<div id="logistic-regression" class="section level2" number="2.3">
-<h2 number="2.3"><span class="header-section-number">2.3</span> Logistic regression</h2>
-<p>As a practical bayesian example, we consider hierarchical logistic regression using the following model:</p>
+<div id="bayesian-logistic-regression" class="section level2" number="2.3">
+<h2 number="2.3"><span class="header-section-number">2.3</span> Bayesian logistic regression</h2>
+<p>As a practical bayesian example, we consider hierarchical logistic regression using the following model: <span class="math display">\[\begin{equation*}
+    \boldsymbol{\beta} \sim \mathcal{N}(0, 0.35^2. \boldsymbol{I}_4), \quad
+    y_j \sim \text{Bernoulli}\left(\frac{1}{1+e^{-\boldsymbol{x}_j^\top\boldsymbol{\beta}}}\right).
+\end{equation*}\]</span></p>
 <pre class="r"><code>writeLines(readLines(paste(stan_folder, &quot;logit_reg.stan&quot;, sep=&quot;&quot;)))</code></pre>
 <pre><code>data {
   int&lt;lower=1&gt; D;
@@ -904,29 +918,8 @@ d &lt;- 4
 logit_data&lt;- read_rdump(paste(stan_folder, &quot;logit_reg.data.R&quot;, sep=&quot;&quot;))
 fit_logit &lt;- stan(file = paste(stan_folder, &quot;logit_reg.stan&quot;, sep=&quot;&quot;),
                   data=logit_data, seed = 12,
-                  iter=200, chains=4, refresh=0)</code></pre>
-<pre><code>Running /usr/lib/R/bin/R CMD SHLIB foo.c
-gcc -std=gnu99 -std=gnu11 -I&quot;/usr/share/R/include&quot; -DNDEBUG   -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/Rcpp/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/unsupported&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/BH/include&quot; -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/src/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppParallel/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/rstan/include&quot; -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include &#39;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp&#39;  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1      -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-J7pprH/r-base-4.1.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c foo.c -o foo.o
-In file included from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Core:88:0,
-                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Dense:1,
-                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-                 from &lt;command-line&gt;:0:
-/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name ‘namespace’
- namespace Eigen {
- ^~~~~~~~~
-/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:17: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
- namespace Eigen {
-                 ^
-In file included from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Dense:1:0,
-                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-                 from &lt;command-line&gt;:0:
-/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Core:96:10: fatal error: complex: Aucun fichier ou dossier de ce type
- #include &lt;complex&gt;
-          ^~~~~~~~~
-compilation terminated.
-/usr/lib/R/etc/Makeconf:168: recipe for target &#39;foo.o&#39; failed
-make: *** [foo.o] Error 1</code></pre>
-<pre class="r"><code>mon &lt;- monitor(fit_logit)
+                  iter=200, chains=4, refresh=0)
+mon &lt;- monitor(fit_logit)
 
 chains &lt;- as.array(fit_logit)
 dim_chains &lt;- dim(chains)
@@ -940,7 +933,6 @@ for (i in 1:dim_chains[3]) {
 }
 
 mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
-
 mon</code></pre>
 <pre><code>Inference for the input samples (4 chains: each with iter = 200; warmup = 100):
 
@@ -955,18 +947,7 @@ For each parameter, Bulk_ESS and Tail_ESS are crude measures of
 effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
 per chain is considered good), and Rhat is the potential scale reduction 
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
-<pre class="r"><code>summary(mon[1:d, &#39;Rhat&#39;])</code></pre>
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.002   1.004   1.006   1.006   1.009   1.011 </code></pre>
-<pre class="r"><code>summary(mon[1:d, &#39;Rhat_inf&#39;])</code></pre>
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.007   1.011   1.012   1.014   1.015   1.022 </code></pre>
-<pre class="r"><code>mon[d+1, &quot;Rhat_inf&quot;]</code></pre>
-<pre><code>    lp__ 
-1.015831 </code></pre>
-<pre class="r"><code>perm_chains &lt;- aperm(chains, c(1,3,2))
-rhat_infinity_max_directions(perm_chains)</code></pre>
-<pre><code>[1] 1.03357</code></pre>
+<p>Despite a low number of iterations, all the different univariate <span class="math inline">\(\hat{R}_\infty\)</span> are mostly below <span class="math inline">\(1.02\)</span> when replicated, and the rank-<span class="math inline">\(\hat{R}\)</span> are below <span class="math inline">\(1.01\)</span>. We compare the proportion of <span class="math inline">\(\hat{R}^{(\text{max})}_\infty\)</span> replications over <span class="math inline">\(1.03\)</span>, with the proportion of univariate <span class="math inline">\(\hat{R}_\infty\)</span> for lp__ over <span class="math inline">\(1.02\)</span>:</p>
 <pre class="r"><code>reps &lt;- 50
 
 gen_beta_logit &lt;- function(i){
@@ -1019,12 +1000,19 @@ plot_hist(R_matrix_logit2, colors = r_colors, vaxis_pos = 0.998,
           xlabels = xlabels, plot_threshold = T,
           bin_size = 0.003, lim_y_axis = 25)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+<p>Both diagnostic looks similar: although most of simulations seems satisfying, a non-negligible part of replications seems to suffer from a lack of convergence.</p>
 </div>
 </div>
 <div id="empirical-examples" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Empirical examples</h1>
+<p>This section is dedicated to practical case for Bayesian inference.</p>
 <div id="autoregressive-model" class="section level2" number="3.1">
 <h2 number="3.1"><span class="header-section-number">3.1</span> Autoregressive model</h2>
+<p>We start by running a basic autoreggressive model to study the case of a Markov chain with different variance on the chains: <span class="math display">\[\begin{equation*}
+  \theta^{(i+1,j)} = \rho \theta^{(i,j)} + \epsilon_{i,j}, 
+  \quad \text{with} \quad
+  \epsilon_{i,j} \sim \mathcal{N}(0,\sigma^2_j),
+\end{equation*}\]</span> where <span class="math inline">\(\rho \in (0,1)\)</span> and <span class="math inline">\(\sigma_j &gt; 0\)</span>.</p>
 <pre class="r"><code>autoregressive &lt;- function(n, rho, sigma){
   chain &lt;- c()
   pre &lt;- 0
@@ -1041,8 +1029,7 @@ gen_autoreg_chains &lt;- function(M, N, rho, sigma, sigmaM){
   return (array(c(replicate(M-1, autoregressive(N, rho, sigma)), 
                   autoregressive(N, rho, sigmaM)), c(N,M)))
 }</code></pre>
-<div id="plot-of-r-hatx" class="section level3" number="3.1.1">
-<h3 number="3.1.1"><span class="header-section-number">3.1.1</span> Plot of R-hat(x)</h3>
+<p>Clearly <span class="math inline">\(\hat{R}_\infty\)</span> diagnose a convergence issue:</p>
 <pre class="r"><code>M &lt;- 4
 sigma &lt;- 1
 sigmaM &lt;- 2
@@ -1052,18 +1039,16 @@ rho &lt;- 1/2
 chains = gen_autoreg_chains(M, N, rho, sigma, sigmaM)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0423
+Local R-hat obtained:  1.0621
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.042278</code></pre>
+<pre><code>[1] 1.062088</code></pre>
 <pre class="r"><code>simulated_rhat = all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 plot_local_r(chains, simulated_rhat, col=c(colors[3], colors[2]),
              xlim = c(-6,6), ylim=c(1,1.07), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-18-1.png" width="1152" /></p>
-</div>
-<div id="repetitions-comparison-of-different-r-hat" class="section level3" number="3.1.2">
-<h3 number="3.1.2"><span class="header-section-number">3.1.2</span> Repetitions: comparison of different R-hat</h3>
+<p>Comparison of different versions of <span class="math inline">\(\hat{R}\)</span> using replications:</p>
 <pre class="r"><code>r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
@@ -1079,11 +1064,10 @@ plot_hist(R_matrix_autoreg, colors = r_colors,
           bin_size = 0.004, lim_y_axis = 50)</code></pre>
 <p><img src="Simulations_files/figure-html/autoreg_hist-1.png" width="1152" /></p>
 </div>
-</div>
 <div id="hmc-on-cauchy-distribution" class="section level2" number="3.2">
 <h2 number="3.2"><span class="header-section-number">3.2</span> HMC on Cauchy distribution</h2>
-<p>In this section, we will study two parameterization of Cauchy using HMC: - Nominal parameterization which is a direct one. - Alternative parameterization which is a scale mixture of Gaussians.</p>
-<p>To study these two parametrizations we will use rank plots which illustrate a mixing problem if they are not uniform. First we will look for an element of the vector for which our <span class="math inline">\(\hat R\)</span> is one of the highest. Here we want rather to study the tail of the distribution than the bulk because of the thick tail of the Cauchy distribution. Finally, we will use the rank plots of this element found to know if we have a mixing problem or not.</p>
+In this section, we will study two parameterization of Cauchy using HMC:
+<p>One would expect convergence issues with the nominal parameterisation and not with the alternative one. For both, the process of selecting the worst parameters among the <span class="math inline">\(50\)</span> ones is iterated for the generation of replications.</p>
 <div id="nominal-parameterization" class="section level3" number="3.2.1">
 <h3 number="3.2.1"><span class="header-section-number">3.2.1</span> Nominal parameterization</h3>
 <p>Model :</p>
@@ -1118,8 +1102,7 @@ For each parameter, Bulk_ESS and Tail_ESS are crude measures of
 effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
 per chain is considered good), and Rhat is the potential scale reduction 
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
-<div id="plot-of-r-hatx-1" class="section level4" number="3.2.1.1">
-<h4 number="3.2.1.1"><span class="header-section-number">3.2.1.1</span> Plot of R-hat(x)</h4>
+<p>Plot of <span class="math inline">\(\hat{R}(x)\)</span>:</p>
 <pre class="r"><code>chains &lt;- as.array(fit_nom)
 dim_chains &lt;- dim(chains)
 
@@ -1148,9 +1131,7 @@ plot_local_r(chains[ , , which_max_rhat_inf], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(-50,200), ylim=c(1,10), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-23-1.png" width="1152" /></p>
-</div>
-<div id="repetitions-comparison-of-different-r-hat-1" class="section level4" number="3.2.1.2">
-<h4 number="3.2.1.2"><span class="header-section-number">3.2.1.2</span> Repetitions: comparison of different R-hat</h4>
+<p>Comparison of different versions of <span class="math inline">\(\hat{R}\)</span> using replications:</p>
 <pre class="r"><code>gen_diverging_cauchy &lt;- function(i){
   # fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_nom.stan&quot;, sep=&quot;&quot;), refresh = 0)
   # saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_fits/cauchy_nom_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
@@ -1187,7 +1168,6 @@ xlabels = c(1, 1.1, 1.2, 1.3, 1.4)
 plot_hist(R_matrix_cauchy, colors = r_colors, xlabels = xlabels,
           bin_size = 0.017, lim_y_axis = 20)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-24-1.png" width="1152" /></p>
-</div>
 </div>
 <div id="alternative-parameterization" class="section level3" number="3.2.2">
 <h3 number="3.2.2"><span class="header-section-number">3.2.2</span> Alternative parameterization</h3>
@@ -1228,8 +1208,7 @@ For each parameter, Bulk_ESS and Tail_ESS are crude measures of
 effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
 per chain is considered good), and Rhat is the potential scale reduction 
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
-<div id="plot-of-r-hatx-2" class="section level4" number="3.2.2.1">
-<h4 number="3.2.2.1"><span class="header-section-number">3.2.2.1</span> Plot of R-hat(x)</h4>
+<p>Plot of <span class="math inline">\(\hat{R}(x)\)</span>:</p>
 <pre class="r"><code>chains &lt;- as.array(fit_alt1)
 dim_chains &lt;- dim(chains)
 
@@ -1257,9 +1236,7 @@ plot_local_r(chains[, , which_max_rhat], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(-4,4), ylim=c(0.9995,1.03), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-29-1.png" width="1152" /></p>
-</div>
-<div id="repetitions-comparison-of-different-r-hat-2" class="section level4" number="3.2.2.2">
-<h4 number="3.2.2.2"><span class="header-section-number">3.2.2.2</span> Repetitions: comparison of different R-hat</h4>
+<p>Comparison of different versions of <span class="math inline">\(\hat{R}\)</span> using replications:</p>
 <pre class="r"><code>gen_converging_cauchy &lt;- function(i){
   # fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_alt_1.stan&quot;, sep=&quot;&quot;), refresh = 0)
   # saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_fits/cauchy_alt_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
@@ -1298,7 +1275,6 @@ plot_hist(R_matrix_cauchy2, colors = r_colors, xlabels = xlabels,
 <p><img src="Simulations_files/figure-html/unnamed-chunk-30-1.png" width="1152" /></p>
 </div>
 </div>
-</div>
 <div id="hierarchical-model-eight-schools" class="section level2" number="3.3">
 <h2 number="3.3"><span class="header-section-number">3.3</span> Hierarchical model: Eight Schools</h2>
 <p>Model :</p>
@@ -1323,7 +1299,8 @@ model {
 }</code></pre>
 <div id="centered-eight-schools-model" class="section level3" number="3.3.1">
 <h3 number="3.3.1"><span class="header-section-number">3.3.1</span> Centered Eight Schools model</h3>
-<p>We will proceed in the same way as the case of the Cauchy distribution concerning the rank plots, but this time we will focus on the parameter <span class="math inline">\(\tau\)</span>. And our choice is due to the fact that the distribution becomes more centralized on the population mean when faced with the small values of the population standard deviation <span class="math inline">\(\tau\)</span>, which makes it difficult to explore this distribution by MCMC chains.</p>
+As a classical Bayesian example, we consider using HMC on a hierarchical Bayesian model and in particular the eight-school, where two parameterisations are possible to model the problem:
+<p>Similarly to Vehtari et al. (2021), we analyse convergence of the chains by studying parameter <span class="math inline">\(\tau\)</span>.</p>
 <pre class="r"><code>eight_schools &lt;- read_rdump(paste(stan_folder, &quot;eight_schools.data.R&quot;, sep=&quot;&quot;))
 # fit_cp &lt;- stan(
 #   file = paste(stan_folder, &quot;eight_schools_cp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
@@ -1354,8 +1331,7 @@ For each parameter, Bulk_ESS and Tail_ESS are crude measures of
 effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
 per chain is considered good), and Rhat is the potential scale reduction 
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
-<div id="plot-of-r-hatx-3" class="section level4" number="3.3.1.1">
-<h4 number="3.3.1.1"><span class="header-section-number">3.3.1.1</span> Plot of R-hat(x)</h4>
+<p>Plot of <span class="math inline">\(\hat{R}(x)\)</span></p>
 <pre class="r"><code>chains &lt;- as.array(fit_cp)
 dim_chains &lt;- dim(chains)
 
@@ -1367,9 +1343,7 @@ plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(0,25), ylim=c(0.999,1.04), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-34-1.png" width="1152" /></p>
-</div>
-<div id="repetitions-comparison-of-different-r-hat-3" class="section level4" number="3.3.1.2">
-<h4 number="3.3.1.2"><span class="header-section-number">3.3.1.2</span> Repetitions: comparison of different R-hat</h4>
+<p>Comparison of different versions of <span class="math inline">\(\hat{R}\)</span> using replications:</p>
 <pre class="r"><code>gen_centered_eight_school &lt;- function(i){
   # fit_cp &lt;- stan(
   #   file = paste(stan_folder, &quot;eight_schools_cp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
@@ -1399,7 +1373,6 @@ xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14)
 plot_hist(R_matrix_8schools, colors = r_colors, xlabels = xlabels,
           bin_size = 0.005, lim_y_axis = 30)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-35-1.png" width="1152" /></p>
-</div>
 </div>
 <div id="non-centered-eight-schools-model" class="section level3" number="3.3.2">
 <h3 number="3.3.2"><span class="header-section-number">3.3.2</span> Non-centered Eight Schools model</h3>
@@ -1433,29 +1406,8 @@ model {
   file = paste(stan_folder, &quot;eight_schools_ncp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
   iter = 2000, chains = 4, seed = 483892929, refresh = 0,
   control = list(adapt_delta = 0.95)
-)</code></pre>
-<pre><code>Running /usr/lib/R/bin/R CMD SHLIB foo.c
-gcc -std=gnu99 -std=gnu11 -I&quot;/usr/share/R/include&quot; -DNDEBUG   -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/Rcpp/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/unsupported&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/BH/include&quot; -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/src/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppParallel/include/&quot;  -I&quot;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/rstan/include&quot; -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include &#39;/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp&#39;  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1      -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-J7pprH/r-base-4.1.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c foo.c -o foo.o
-In file included from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Core:88:0,
-                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Dense:1,
-                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-                 from &lt;command-line&gt;:0:
-/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name ‘namespace’
- namespace Eigen {
- ^~~~~~~~~
-/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:17: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
- namespace Eigen {
-                 ^
-In file included from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Dense:1:0,
-                 from /scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-                 from &lt;command-line&gt;:0:
-/scratch/tmoins/R/x86_64-pc-linux-gnu-library/4.1/RcppEigen/include/Eigen/Core:96:10: fatal error: complex: Aucun fichier ou dossier de ce type
- #include &lt;complex&gt;
-          ^~~~~~~~~
-compilation terminated.
-/usr/lib/R/etc/Makeconf:168: recipe for target &#39;foo.o&#39; failed
-make: *** [foo.o] Error 1</code></pre>
-<pre class="r"><code># saveRDS(fit_ncp2, paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp.rds&quot;, sep=&quot;&quot;))
+)
+# saveRDS(fit_ncp2, paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp.rds&quot;, sep=&quot;&quot;))
 fit_ncp2 &lt;- readRDS(paste(stan_folder, &quot;eight_schools_fits/eight_schools_ncp.rds&quot;, sep=&quot;&quot;))
 
 
@@ -1488,8 +1440,7 @@ For each parameter, Bulk_ESS and Tail_ESS are crude measures of
 effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
 per chain is considered good), and Rhat is the potential scale reduction 
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
-<div id="plot-of-r-hatx-4" class="section level4" number="3.3.2.1">
-<h4 number="3.3.2.1"><span class="header-section-number">3.3.2.1</span> Plot of R-hat(x)</h4>
+<p>Plot of <span class="math inline">\(\hat{R}(x)\)</span>:</p>
 <pre class="r"><code>chains &lt;- as.array(fit_ncp2)
 dim_chains &lt;- dim(chains)
 
@@ -1500,9 +1451,7 @@ plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(0,25), ylim=c(0.999,1.04), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-39-1.png" width="1152" /></p>
-</div>
-<div id="repetitions-comparison-of-different-r-hat-4" class="section level4" number="3.3.2.2">
-<h4 number="3.3.2.2"><span class="header-section-number">3.3.2.2</span> Repetitions: comparison of different R-hat</h4>
+<p>Comparison of different versions of <span class="math inline">\(\hat{R}\)</span> using replications:</p>
 <pre class="r"><code>gen_ncp_eight_school &lt;- function(i){
   # fit_ncp2 &lt;- stan(
   #   file = paste(stan_folder, &quot;eight_schools_ncp.stan&quot;, sep=&quot;&quot;), data = eight_schools,
@@ -1538,9 +1487,8 @@ ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
     geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
                color = &quot;black&quot;, size=0.5) +
     xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;) + ylim(1, 1.3)</code></pre>
-<pre><code>Warning: Removed 373 rows containing non-finite values (stat_boxplot).</code></pre>
+<pre><code>Warning: Removed 327 rows containing non-finite values (stat_boxplot).</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-42-1.png" width="1152" /></p>
-</div>
 </div>
 </div>
 </div>
