@@ -87,34 +87,33 @@ r_values <- c()
 ```
 
 
-This notebook is a supplementary material of the paper "On the use of local $\hat{R}$ to improve MCMC convergence diagnostic".
-It illustrates the use of a localized version of the Gelman-Rubin diagnostic (commonly named $\hat{R}$) on various examples.
+This notebook is a supplementary material of the paper "On the use of a local $\hat{R}$ to improve MCMC convergence diagnostic" ([link](https://hal.inria.fr/hal-03600407)).
+It illustrates the use of a localized version of the Gelman--Rubin diagnostic (commonly named $\hat{R}$) on various examples.
 This local version $\hat{R}(x)$ has a population counterpart which can be written
 \begin{equation}
     \label{eq:R_theorique}
     R(x) = \sqrt{\frac{W(x)+B(x)}{W(x)}} = \sqrt{1 + \frac{\sum_{j=1}^m\sum_{k=j+1}^m \left(F_j(x)-F_k(x)\right)^2}{m\sum_{j=1}^m F_j(x)(1-F_j(x))}}.
 \end{equation}
-In addition to the $\hat{R}(x)$ and $R(x)$ curves, we suggest to use $R_\infty = \sup_{x \in\mathbb{R}} R(x)$ as a scalar summary.
+In addition to the $\hat{R}(x)$ curves, we suggest to use $R_\infty = \sup_{x \in\mathbb{R}} R(x)$ as a scalar summary.
 
 This notebook includes most of the examples used in the article plus others, showing how the figures were generated.
 Section 1 concerns some toy examples (Section 2.5 in the paper), Section 2 the multivariate extension (Section 3 in the paper), 
 and Section 3 the applications to Bayesian inference (Section 4 in the paper).
 
-The code that is used is also available online (https://github.com/TheoMoins/localrhat).
+For reproducibility, the code that is used and the corresponding markdown file is also available online (https://github.com/TheoMoins/localrhat).
 
 # Known distributions on the chains
 
-We start by illustrate the choice of threshold for $\hat{R}_\infty$ depending on the number of chains.
-
 ## Threshold estimation
 
-In this part we focus on the case where all the distributions are the same, to 
-verify the behavior in the null hypothesis and estimate the type I error at $5\%$.
+We start by illustrate the choice of threshold for $\hat{R}_\infty$ depending on the number of chains.
+We focus on the case where all the distributions are the same, to 
+verify the behavior in the null hypothesis, and estimate the type I error at $5\%$.
 This value will be used as a threshold to determine whether or not the chains 
 follows the same distribution (i.e. convergence is reached).
 For each example we keep a constant number of i.i.d samples ($nm=400$)
 
-For $m=2$, $1.01$ is an adapted threshold:
+For $m=2$, $1.01$ seems to be an adapted threshold:
 
 ```{r same_uniform_hists1, warning=FALSE}
 sigma <- 1
@@ -204,10 +203,10 @@ plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
 
 ## Counter examples for $\hat{R}$
 
-We consider two cases where $\hat{R}$ is not able to detect a convergence failure,
+Then, we consider two cases where $\hat{R}$ is not able to detect a convergence failure,
 and a then some examples where the improvement rank-$\hat{R}$ also fails.
 
-### Example (i): Uniform distribution
+### Chains with same mean and different variances: Uniform distribution
 
 As a first example we consider $m$ chains following centered uniform distributions, 
 with the last having a different support than the other:
@@ -216,8 +215,8 @@ with the last having a different support than the other:
   \text{and}\quad F_m(x) &=  \frac{x}{2\sigma_m} + \frac{1}{2}, \quad \forall x \in \left[-\sigma_m; \sigma_m\right].
 \end{align*}
 
-In such a case the expression of $R(x)$ is explicit and can be compared to the estimator $\hat{R}(x)$:
-to illustrate we choose $m=4$ chains, $\sigma = 3/4$ and $\sigma_m = 1$.
+In such a case the expression of $R(x)$ is explicit (see Example 1 in Section 2.5) and can be compared to the estimator $\hat{R}(x)$.
+To illustrate we choose $m=4$ chains, $\sigma = 3/4$ and $\sigma_m = 1$:
 
 ```{r uniform_r_x, warning=FALSE}
 sigma <- 3/4
@@ -250,8 +249,8 @@ plot_local_r(chains, simulated_rhat, theoretical_r_values, col=c(colors[3], colo
 ```
 
 
-We can see that $\hat{R}(x)$ (in violet) slightly overestimate $R(x)$, which makes it more conservative than
-the population value. 
+We can see that $\hat{R}(x)$ (in violet) neither overestimate nor underestimate $R(x)$, 
+which makes it reasonable to estimate the population value. 
 
 We replicate the experiment 500 times and study the histogram of replications of
 different versions of $\hat{R}$:
@@ -275,7 +274,7 @@ plot_hist(R_matrix_unif, colors = r_colors, xlabels = xlabels,
 ```
 
 As constructed initially by Vehtari et al. (2021), this example fool the original $\hat{R}$.
-The rank version and $\hat{R}_\infty$ is on the contrary robust in this case.
+The rank version as well as $\hat{R}_\infty$ is on the contrary robust in this case.
 
 ```{r, include=FALSE}
 r_version <- c(r_version, 
@@ -287,7 +286,7 @@ r_values <- c(r_values, as.vector(R_matrix_unif))
 ```
 
 
-### Example (ii): Pareto distribution
+### Chains with heavy-tails and different locations: Pareto distribution
 
 Similarly, we check the second counter-example that fool the original $\hat{R}$:
 chains with heavy-tails and different locations. To do so we consider Pareto 
@@ -334,8 +333,8 @@ plot_local_r(chains, simulated_rhat, theoretical_r_values,
 ```
 
 The same observations as for the previous example can be done here: $\hat{R}_\infty$
-overestimates $R_\infty$, whose value already allowed the diagnosis of a convergence issue.
-We can verify the behaviour on replications: 
+is a reasonable quantity to estimate $R_\infty$.
+We can verify the behavior on replications: 
 
 ```{r pareto_hists, warning=FALSE}
 r_functions <- c(trad_rhat, rhat, rhat_infinity)
@@ -365,9 +364,9 @@ r_values <- c(r_values, as.vector(R_matrix_pareto))
 
 In this part, We will see 3 cases where rank-$\hat{R}$ doesn't manage to detect the convergence issue. 
 These cases correspond to chains with different type of distributions, but with same mean and
-mean over the median.
+mean over the median. See Appendix A for details about the construction of such examples.
 
-### Example (iii): Uniform and Laplace distributions
+### Uniform and Laplace distributions
 
 We start by an example where the population version can be computed explicitly: 
 if one chain is uniformly distributed $\mathcal{U}(-2\sigma, 2\sigma)$ and 
@@ -443,7 +442,7 @@ r_experiment <- c(r_experiment, rep("5.Laplace/Uniform", length(R_matrix_lapl_un
 r_values <- c(r_values, as.vector(R_matrix_lapl_unif))
 ```
 
-### Example (iv): Uniform and Normal distributions
+### Uniform and Normal distributions
 
 Similarly, others distributions are possible to build counter-examples. 
 Consider $m-1$ normal chains $\mathcal{N}\left(0, \frac{\pi}{2}\sigma^2\right)$ and
@@ -477,11 +476,11 @@ xlabels <- c(1, 1.005, 1.01, 1.015, 1.02)
 
 plot_local_r(chains, simulated_rhat, theoretical_r_values, 
              xlabels = xlabels, col=c(colors[3], colors[2]), threshold = 1.01,
-             xlim = c(-2,2), ylim=c(0.999,1.025), title ="Gaussian/Uniform distributions")
+             xlim = c(-2,2), ylim=c(0.999,1.028), title ="Gaussian/Uniform distributions")
 ```
 
 Replications confirms that this construction are fooling the different versions
-of $\hat{R}$ except $\hat{R}_\infty$.
+of $\hat{R}$ except $\hat{R}_\infty$:
 
 ```{r gaussian_uniform_hists, warning=FALSE}
 r_functions <- c(trad_rhat, rhat, rhat_infinity)
@@ -510,9 +509,10 @@ r_values <- c(r_values, as.vector(R_matrix_norm_unif))
 ```
 
 
-### Example (v): Uniform and Exponential distributions
+### Uniform and Exponential distributions
 
-Finally, it is also possible to mix uniform distributions with exponential:
+Finally, it is also possible to mix uniform distributions with exponential to 
+build a counter-example for rank-$\hat{R}$:
 
 ```{r exp_uniform_x, warning=FALSE}
 M <- 4
@@ -574,6 +574,9 @@ r_values <- c(r_values, as.vector(R_matrix_exp_unif))
 
 ## Summary
 
+The following boxplot summarizes the values of replicated $\hat{R}$, rank-$\hat{R}$ and $\hat{R}_\infty$
+on the different examples:
+
 ```{r}
 data=data.frame(r_version, r_experiment,  r_values)
 
@@ -595,22 +598,20 @@ we suggest to apply $\hat{R}$ on a multivariate indicator variable
 $I_{\boldsymbol{x}}^{(j)} = \mathbb{I}\{\theta_1^{(j)} \leq x_1, \ldots, \theta_d^{(j)} \leq x_d\}$ 
 for any $\boldsymbol{x} = (x_1, \ldots, x_d) \in \mathbb{R}^d$ in two steps:
 
-\begin{enumerate}
-    \item Compute the univariate $\hat{R}_{\infty,p}$ separately on each of the 
+    1. Compute the univariate $\hat{R}_{\infty,p}$ separately on each of the 
     coordinates $p\in\{1,\dots,d\}$.
-    \item If $\hat{R}_{\infty,p} < 1.01$ for all $p\in\{1,\dots,d\}$, then all 
+    2. If $\hat{R}_{\infty,p} < 1.01$ for all $p\in\{1,\dots,d\}$, then all 
     margins are deemed to have converged and to be identically distributed.
     Compute the multivariate $\hat{R}^{(\text{max})}_\infty$ to check the convergence of the 
     dependence structure in all dependence directions. If the number of dimension is too high,
     compute a univarite $\hat{R}$ on the log-posterior.
-\end{enumerate}
 
 Thus we recommend to compute the multivariate version only in the case where all the
 univariate one doesn't detect any convergence issue, this is why in the part we will
 focus only of cases where the margins are the same (for example uniform).
 
 Additional experiments on different copulas using Open TURNS can be found here: 
-https://theomoins.github.io/localrhat/Simulations_ot.html
+(https://theomoins.github.io/localrhat/Simulations_ot.html)
 
 
 ```{r, comment=NA, message=FALSE, warning=FALSE, results='hide', cache=FALSE}
@@ -651,7 +652,7 @@ In particular, we consider bivariate normal densities with zero means, and compa
 $m-1$ chains with identity covariance matrix, and one with non-zero off-diagonal
 elements $\rho \in (-1,1)$.
 
-We start by define the function that will allows us to generate $m$ chains of 
+We start by defining the function that will allows us to generate $m$ chains of 
 size $n$ with this configuration :
 
 ```{r, warning=FALSE}
@@ -663,7 +664,7 @@ gen_bvnormal_chains <- function(M, N, rho){
 ```
 
 
-As an example, we consider the case with $m=2$ chains of size $n=100$, and 
+As an example, we consider the case with $m=2$ chains of size $n=200$, and 
 $\rho = 0.9$ on the last chain. 
 This choice of $n$ relatively small is due to the fact the elements in the chain
 are i.i.d here, so $n$ can be seen as an effective sample size for a given chain
@@ -771,13 +772,14 @@ legend(x=0.6, y=1.14, col=c(colors[4], colors[3], colors[2]), pch=19,
                   expression(italic(R[infinity]))), cex=2)
 ```
 
-Remarks : 
+Two remarks can be done here: 
 
-- Our version is the most sensitive, and is more sensitive as $|\rho|$ increases
-- The asymmetry can be link to the theoretical computations.
-WARNING: in the case where $d=2$, the orders on the two bounds PLOD and NLOD are 
-inverted (compared to the asymptotic behavior), and that is why here we are 
-more sensitive when $\rho < 0$.
+    1. First, $\hat{R}_\infty$ seems to be more sensitive to the difference in the 
+    copula, and this phenomenon increases with $|\rho|$ which was expected. 
+    2. The asymmetry can be link to the theoretical computations.
+    WARNING: The case $d=2$ is special: the orders on the two bounds PLOD and NLOD are 
+    inverted compared to the asymptotic behavior, and that is why here we are 
+    more sensitive when $\rho < 0$ than when $\rho >0$.
 
 
 ## General number of dimensions
@@ -880,7 +882,7 @@ plot_hist(R_matrix, colors = r_colors,
 
 ```
 
-To avoid this issue, $\hat{R}_\infty$ can be computed on all directions, 
+To avoid the issue of being sensitive only to a specific direction, $\hat{R}_\infty$ can be computed on all directions, 
 which means if $d=3$ that $\hat{R}$ is computed on 
 $$
   I\left(\theta_1^{(n,m)} \leq x_1, \theta_2^{(n,m)} \leq x_2, \theta_3^{(n,m)} \leq x_3\right)\\
@@ -942,6 +944,7 @@ ggplot(R_df, aes(x = Values, y = as.factor(Dim), fill = Nb_Dir)) +
 
 ```
 
+Here, $\hat{R}^{(\text{max})}_\infty$ seems to stay robust with respect to this curse of dimensionality in terms of sensitivity, as the histograms look invariant when $d$ increases, contrary to $\hat{R}_\infty$.
 
 ## Bayesian logistic regression
 
@@ -1121,16 +1124,15 @@ R_matrix_autoreg <- repetitions_R(
 
 plot_hist(R_matrix_autoreg, colors = r_colors, 
           xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1),
-          bin_size = 0.004, lim_y_axis = 50)
+          bin_size = 0.004, lim_y_axis = 20)
 ```
 
 ```{r, include=FALSE}
-r_version <- c(r_version, 
-               rep(colnames(R_matrix_autoreg)[1], dim(R_matrix_autoreg)[1]),
+r_version <- c(rep(colnames(R_matrix_autoreg)[1], dim(R_matrix_autoreg)[1]),
                rep(colnames(R_matrix_autoreg)[2], dim(R_matrix_autoreg)[1]),
                rep(colnames(R_matrix_autoreg)[3], dim(R_matrix_autoreg)[1]))
-r_experiment <- c(r_experiment, rep("1.Autoregressive", length(R_matrix_autoreg)))
-r_values <- c(r_values, as.vector(R_matrix_autoreg))
+r_experiment <- c(rep("1.Autoregressive", length(R_matrix_autoreg)))
+r_values <- c(as.vector(R_matrix_autoreg))
 ```
 
 
@@ -1366,20 +1368,17 @@ Model :
 writeLines(readLines(paste(stan_folder, "eight_schools_cp.stan", sep="")))
 ```
 
-### Centered Eight Schools model
-
 As a classical Bayesian example, we consider using HMC on a hierarchical Bayesian model and in particular the eight-school, 
 where two parameterisations are possible to model the problem:
-\begin{tabular}{ll}
-    \textbf{Example~\ref{fig:hierarchical}.a:} & Centered parameterisation (CP) \\[0.1cm]
-    & $\theta_j \sim \mathcal{N}(\mu,\tau), \quad 
-    y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$.\\[0.2cm]
-    \textbf{Example~\ref{fig:hierarchical}.b:} & Non-centered parameterisation (NCP) \\[0.1cm]
-    & $\bar{\theta}_j \sim \mathcal{N}(0,1), \quad 
-    \theta_j = \mu + \tau \bar{\theta}_j, \quad y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$.\\[0.2cm]
-\end{tabular}
+
+    1. Centered parameterisation (CP): 
+    $\theta_j \sim \mathcal{N}(\mu,\tau), \quad y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$
+    2. Non-centered parameterisation (NCP):
+    $\bar{\theta}_j \sim \mathcal{N}(0,1), \quad  \theta_j = \mu + \tau \bar{\theta}_j, \quad y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$
 
 Similarly to Vehtari et al. (2021), we analyse convergence of the chains by studying parameter $\tau$.
+
+### Centered parameterisation
 
 ```{r, warning=FALSE}
 eight_schools <- read_rdump(paste(stan_folder, "eight_schools.data.R", sep=""))
@@ -1412,7 +1411,6 @@ plot_local_r(chains[, , "tau"], simulated_rhat,
 
 
 Comparison of different versions of $\hat{R}$ using replications:
-
 
 ```{r, warning=FALSE}
 
@@ -1457,7 +1455,7 @@ r_values <- c(r_values, as.vector(R_matrix_8schools))
 ```
 
 
-### Non-centered Eight Schools model
+### Non-centered parameterisation
 
 Model :
 
@@ -1539,7 +1537,10 @@ r_experiment <- c(r_experiment, rep("5.8Schools2", length(R_matrix_8schools2)))
 r_values <- c(r_values, as.vector(R_matrix_8schools2))
 ```
 
+## Summary
 
+The following boxplot summarizes the values of replicated $\hat{R}$, rank-$\hat{R}$ and $\hat{R}_\infty$
+on the different examples of this section:
 
 ```{r}
 data=data.frame(r_version, r_experiment,  r_values)
@@ -1548,5 +1549,7 @@ ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
     geom_boxplot() + 
     geom_hline(yintercept=1.01, linetype="dashed", 
                color = "black", size=0.5) +
+      geom_hline(yintercept=1.02, linetype="dashed", 
+             color = "green", size=0.5) +
     xlab("Experiments") + ylab("Values") + ylim(1, 1.3)
 ```
