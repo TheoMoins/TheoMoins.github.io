@@ -373,10 +373,10 @@ chains = gen_chains(M, N, uniform_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0545
+Local R-hat obtained:  1.0715
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.054547</code></pre>
+<pre><code>[1] 1.071543</code></pre>
 <pre class="r"><code>simulated_rhat = all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
@@ -432,10 +432,10 @@ chains &lt;- gen_chains(M, N, pareto_rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0488
+Local R-hat obtained:  1.0408
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.048754</code></pre>
+<pre><code>[1] 1.040772</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 plot_local_r(chains, simulated_rhat, theoretical_r_values,
@@ -484,10 +484,10 @@ chains &lt;- gen_chains(M, N, rdists)
 
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.0244
-p-value:  0.001
+Local R-hat obtained:  1.0186
+p-value:  0.003
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.024427</code></pre>
+<pre><code>[1] 1.018643</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.01, 1.02, 1.03)
@@ -582,10 +582,10 @@ rdists &lt;- c((function(n) rexp(n)),
 chains &lt;- gen_chains(M, N, rdists)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.0476
+Local R-hat obtained:  1.0617
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.047596</code></pre>
+<pre><code>[1] 1.061693</code></pre>
 <pre class="r"><code>simulated_rhat &lt;- all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08)
@@ -674,10 +674,10 @@ N &lt;- 200
 chains &lt;- gen_bvnormal_chains(M, N, rho)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0125
-Local R-hat obtained:  1.027
-p-value:  0.001
+Local R-hat obtained:  1.0163
+p-value:  0.01
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.027001</code></pre>
+<pre><code>[1] 1.016343</code></pre>
 <p>We simulate 100 experiments, which result as 100 draws of the different <span class="math inline">\(\hat{R}\)</span>.</p>
 <p>Histogram of the corresponding values of <span class="math inline">\(\hat{R}_\infty\)</span> and the multivariate <span class="math inline">\(\hat{R}\)</span> of Brooks and Gelman (1998) :</p>
 <pre class="r"><code>rho &lt;- 0.9
@@ -806,12 +806,12 @@ r_colors &lt;- c(colors[3], colors[4])
 
 S &lt;- generate_sigma_matrix(d)
 print(S)</code></pre>
-<pre><code>            [,1]        [,2]       [,3]       [,4]       [,5]
-[1,]  1.00000000  0.05295691 -0.2402751  0.3086880 -0.2746954
-[2,]  0.05295691  1.00000000 -0.5699470 -0.5312077 -0.0580393
-[3,] -0.24027507 -0.56994702  1.0000000 -0.2701638 -0.2322927
-[4,]  0.30868802 -0.53120768 -0.2701638  1.0000000  0.5290676
-[5,] -0.27469545 -0.05803930 -0.2322927  0.5290676  1.0000000</code></pre>
+<pre><code>           [,1]      [,2]       [,3]      [,4]       [,5]
+[1,]  1.0000000 0.3528609  0.7434603 0.1491803 -0.1380975
+[2,]  0.3528609 1.0000000  0.4345097 0.8059773  0.5687374
+[3,]  0.7434603 0.4345097  1.0000000 0.1837495 -0.2814009
+[4,]  0.1491803 0.8059773  0.1837495 1.0000000  0.2456532
+[5,] -0.1380975 0.5687374 -0.2814009 0.2456532  1.0000000</code></pre>
 <pre class="r"><code>R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d, S)), 
                          r_func = r_functions, 
                          r_names = r_names, 
@@ -1070,10 +1070,10 @@ rho &lt;- 1/2
 chains = gen_autoreg_chains(M, N, rho, sigma, sigmaM)
 rhat_infinity(chains, verbose = T)</code></pre>
 <pre><code>Threshold at confidence level 5%:  1.0195
-Local R-hat obtained:  1.1025
+Local R-hat obtained:  1.048
 p-value: &lt; 0.001
 WARNING: A convergence issue has been diagnosed</code></pre>
-<pre><code>[1] 1.102473</code></pre>
+<pre><code>[1] 1.048033</code></pre>
 <pre class="r"><code>simulated_rhat = all_local_rhat(chains, max_nb_points = &quot;ALL&quot;)
 
 plot_local_r(chains, simulated_rhat, col=c(colors[3], colors[2]),
