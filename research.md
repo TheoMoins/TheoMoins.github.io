@@ -8,7 +8,7 @@ show-avatar: True
 
 #### Under review
 
-* T. Moins, J. Arbel, A. Dutfoy & S. Girard. "*On the use of a local R-hat to improve MCMC convergence diagnostic*", 2022+ ([PDF](https://hal.inria.fr/hal-03600407){:target="_blank"}, [Online appendix](https://theomoins.github.io/localrhat/Simulations.html){:target="_blank"}, [Code](https://github.com/TheoMoins/localrhat){:target="_blank"})
+* T. Moins, J. Arbel, A. Dutfoy & S. Girard. "*On the use of a local R-hat to improve MCMC convergence diagnostic*", 2022+ ([PDF](https://arxiv.org/abs/2205.06694){:target="_blank"}, [Online appendix](https://theomoins.github.io/localrhat/Simulations.html){:target="_blank"}, [Code](https://github.com/TheoMoins/localrhat){:target="_blank"})
 
 #### Published
 
