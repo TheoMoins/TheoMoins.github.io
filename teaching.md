@@ -14,6 +14,8 @@ show-avatar: True
 
 * 2020 STA301 Méthodes statistiques pour la Biologie (2nd Year). Courses and Tutorials
 
+<p>&nbsp;</p>
+
 ### Grenoble INP - Ensimag
 
 * 2022 4MMMPA Modèles probabilistes pour l’apprentissage  (4th year). Course on MCMC algorithms ([Slides](https://github.com/TheoMoins/Stan_tutorial/blob/main/MCMC_Cours.pdf){:target="_blank"})
