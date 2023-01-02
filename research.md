@@ -21,8 +21,10 @@ show-avatar: True
 
 ## Conferences
 
+
 #### 2022
 
+* **CMStats 2022**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](http://www.cmstatistics.org/CMStatistics2022/){:target="_blank"})
 * **Energy Forecasting Innovation Conference**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic.*" ([Link](https://www.kcl.ac.uk/events/energy-forecasting-innovation-conference-building-capacity-from-modern-statistical-methodology){:target="_blank"})
 * **One World YoungStatS webinar**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](https://youngstats.github.io/post/2022/02/08/recent-advances-in-approximate-bayesian-inference/){:target="_blank"}, [Slides](https://drive.google.com/file/d/1d-eT9CjudhQkanRBXJZOI6lxPZb5dFfX/view){:target="_blank"}) 
 * **JDS 2022**, Communication & Contributed Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](https://jds22.sciencesconf.org/){:target="_blank"}, [PDF](https://hal.inria.fr/hal-03683927/document){:target="_blank"})
@@ -32,7 +34,7 @@ show-avatar: True
 
 #### 2021
 
-* **CMStats 2022**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](http://www.cmstatistics.org/CMStatistics2022/){:target="_blank"})
+
 * **CMStats 2021**, **Invited** Talk: "*A Bayesian Framework for Poisson Process Characterization of Extremes with Uninformative Prior*" ([Link](http://www.cmstatistics.org/conferences.php){:target="_blank"})
 * **End-to-end Bayesian learning**, Poster: "*Improving MCMC convergence diagnostic with a local version of R-hat*" ([Link](https://bayesatcirm.github.io/){:target="_blank"}, [Poster](https://drive.google.com/file/d/1l0tJHSJiYhQ_eUmlAFaPA5-an9-Rgd_B/view){:target="_blank"})
 * **BayesComp-ISBA**, Participant in the workshop "*Improving MCMC convergence diagnostic with a local version of R-hat*" ([Link](https://bayescomp-isba.github.io/measuringquality.html){:target="_blank"}, [Poster](https://drive.google.com/file/d/1l0tJHSJiYhQ_eUmlAFaPA5-an9-Rgd_B/view){:target="_blank"}, [Video](https://www.youtube.com/watch?v=9xTpshbKO1g){:target="_blank"})
