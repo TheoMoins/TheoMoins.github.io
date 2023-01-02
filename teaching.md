@@ -18,5 +18,11 @@ show-avatar: True
 
 ### Grenoble INP - Ensimag
 
-* 2022 4MMMPA Modèles probabilistes pour l’apprentissage  (4th year). Course on MCMC algorithms ([Slides](https://github.com/TheoMoins/Stan_tutorial/blob/main/MCMC_Cours.pdf){:target="_blank"})
+* 2022 4MMMPA Modèles probabilistes pour l’apprentissage  (4th year). 4h intervention on MCMC algorithms ([Slides](https://github.com/TheoMoins/Stan_tutorial/blob/main/MCMC_Cours.pdf){:target="_blank"})
+
+<p>&nbsp;</p>
+
+### Université de Franche Comté
+
+* 2022 Chaines de Markov et Statistiques Bayesiennes  (5th year). 3h intervention on MCMC algorithms 
 
