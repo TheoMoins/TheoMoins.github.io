@@ -19,12 +19,17 @@ show-avatar: True
 * T. Moins, D. Aloise & S. Blanchard. "*RecSeats: A Hybrid Convolutional Neural Network Choice Model for Seat Recommendations at Reserved Seating Venues*". **RecSys**, 2020 ([Link](https://recsys.acm.org/recsys20/){:target="_blank"}, [PDF](http://www.perceptionstudies.com/papers/Moins_2020.pdf){:target="_blank"}, [HTML](https://dl.acm.org/doi/fullHtml/10.1145/3383313.3412263){:target="_blank"}).
 
 
-## Conferences
+## Presentations
+
+#### 2023
+
+* **Invited Seminar** (upcoming, 17/02): MAP5 - Mathématiques Appliquées à Paris 5 : "*Reparameterization of extreme value framework for improved Bayesian workflow*" ([Link](https://map5.mi.parisdescartes.fr/seminairesMAP5/exposes/theo-moins-inria/){:target="_blank"})
 
 
 #### 2022
 
 * **CMStats 2022**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](http://www.cmstatistics.org/CMStatistics2022/){:target="_blank"})
+* **Invited Seminar**: Laboratoire de Mathématiques de Besançon (Université de Franche Comté) : "*Reparameterization of extreme value framework for improved Bayesian workflow*"
 * **Energy Forecasting Innovation Conference**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic.*" ([Link](https://www.kcl.ac.uk/events/energy-forecasting-innovation-conference-building-capacity-from-modern-statistical-methodology){:target="_blank"})
 * **One World YoungStatS webinar**, **Invited** Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](https://youngstats.github.io/post/2022/02/08/recent-advances-in-approximate-bayesian-inference/){:target="_blank"}, [Slides](https://drive.google.com/file/d/1d-eT9CjudhQkanRBXJZOI6lxPZb5dFfX/view){:target="_blank"}) 
 * **JDS 2022**, Communication & Contributed Talk: "*On the use of a local R-hat to improve MCMC convergence diagnostic*" ([Link](https://jds22.sciencesconf.org/){:target="_blank"}, [PDF](https://hal.inria.fr/hal-03683927/document){:target="_blank"})
