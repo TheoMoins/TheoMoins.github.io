@@ -298,7 +298,7 @@ R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
-          threshold = 1.01001, xlabels = xlabels, bin_size = 0.0020, 
+          threshold = 1.01001, xlabels = xlabels, bin_size = 0.0020,
           lim_y_axis = 200, vaxis_pos = 0.9985, plot_legend = F)</code></pre>
 <p><img src="Simulations_files/figure-html/same_uniform_hists1-1.png" width="1152" /></p>
 <p>For <span class="math inline">\(m=4\)</span>, <span class="math inline">\(1.01\)</span> may be too strong and <span class="math inline">\(1.02\)</span> seems more reasonable:</p>
@@ -341,7 +341,7 @@ R_matrix_same_unif_par &lt;- cbind(R_matrix_same_unif, R_matrix_same_par)
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 plot_hist(R_matrix_same_unif_par, colors = colors_same, plot_threshold = F,
-          threshold = 1.03, xlabels = xlabels, bin_size = 0.002, 
+          threshold = 1.03, xlabels = xlabels, bin_size = 0.002,
           lim_y_axis = 200, vaxis_pos = 0.9985)</code></pre>
 <p><img src="Simulations_files/figure-html/same_uniform_hists3-1.png" width="1152" /></p>
 </div>
@@ -392,9 +392,9 @@ r_names &lt;- c(&quot;R-hat&quot;,
              &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, uniform_rdists)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
 xlabels &lt;- c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
@@ -421,7 +421,7 @@ M &lt;- 4
 pareto_dists &lt;- c(rep(c((function(q) ppareto(q, location = eta, shape = alpha))), M-1),
                   (function(q) ppareto(q, location = etaM, shape = alpha)))
 
-theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-eta, eta*8), 
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-eta, eta*8),
                                       dists = pareto_dists)
 
 pareto_rdists &lt;- c((function(n) rpareto(n, location = eta, shape = alpha)),
@@ -447,9 +447,9 @@ plot_local_r(chains, simulated_rhat, theoretical_r_values,
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_pareto &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix_pareto &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, pareto_rdists)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
 xlabels = c(1, 1.02, 1.04, 1.06, 1.08)
@@ -472,7 +472,7 @@ dists &lt;- c((function(q) punif(q, -2*sigma, 2*sigma)),
            (function(q) plaplace(q, mean = 0, sd = sqrt(2)*sigma)))
 
 
-theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-1.5, 1.5), 
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-1.5, 1.5),
                                       dists = dists)
 
 
@@ -501,9 +501,9 @@ plot_local_r(chains, simulated_rhat, theoretical_r_values, threshold = 1.01,
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_lapl_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix_lapl_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
@@ -522,7 +522,7 @@ M &lt;- 2
 dists &lt;- c((function(q) pnorm(q, mean = 0, sd = sqrt(0.5*pi)*sigma)),
            (function(q) punif(q, -2*sigma, 2*sigma)))
 
-theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-2, 2), 
+theoretical_r_values &lt;- r_dist_values(npoints = 1000, xlim = c(-2, 2),
                                       dists = dists)
 
 rdists &lt;- c((function(n) rnorm(n, mean = 0, sd = sqrt(0.5*pi)*sigma)),
@@ -540,7 +540,7 @@ WARNING: A convergence issue has been diagnosed</code></pre>
 
 xlabels &lt;- c(1, 1.005, 1.01, 1.015, 1.02)
 
-plot_local_r(chains, simulated_rhat, theoretical_r_values, 
+plot_local_r(chains, simulated_rhat, theoretical_r_values,
              xlabels = xlabels, col=c(colors[3], colors[2]), threshold = 1.01,
              xlim = c(-2,2), ylim=c(0.999,1.028), title =&quot;Gaussian/Uniform distributions&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/gaussian_uniform_x2-1.png" width="1152" /></p>
@@ -549,9 +549,9 @@ plot_local_r(chains, simulated_rhat, theoretical_r_values,
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_norm_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix_norm_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
 xlabels = c(1, 1.01, 1.02, 1.03)
@@ -573,7 +573,7 @@ max_unif &lt;- 1+2*log(2)
 dists &lt;- c(rep(c((function(q) pexp(q))), M-1),
            (function(q) punif(q, min_unif, max_unif)))
 
-theoretical_r_values &lt;- r_dist_values(npoints = 500, xlim = c(-1, 6), 
+theoretical_r_values &lt;- r_dist_values(npoints = 500, xlim = c(-1, 6),
                                       dists = dists)
 
 rdists &lt;- c((function(n) rexp(n)),
@@ -597,12 +597,12 @@ plot_local_r(chains, simulated_rhat, theoretical_r_values,
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_exp_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix_exp_unif &lt;- repetitions_R(chains_func = (function() gen_chains(M, N, rdists)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
-plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.007, 
+plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.007,
           lim_y_axis = 500, vaxis_pos = 0.997)</code></pre>
 <p><img src="Simulations_files/figure-html/exp_uniform_hists-1.png" width="1152" /></p>
 </div>
@@ -613,10 +613,10 @@ plot_hist(R_matrix_exp_unif, colors = r_colors, bin_size = 0.007,
 <pre class="r"><code>data=data.frame(r_version, r_experiment,  r_values)
 
 ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
-    geom_boxplot() + 
-    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
+    geom_boxplot() +
+    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;,
                color = &quot;black&quot;, size=0.5) +
-    geom_hline(yintercept=1.02, linetype=&quot;dashed&quot;, 
+    geom_hline(yintercept=1.02, linetype=&quot;dashed&quot;,
              color = &quot;green&quot;, size=0.5) +
     xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-8-1.png" width="1152" /></p>
@@ -625,11 +625,11 @@ ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
 <div id="multivariate-examples" class="section level1" number="2">
 <h1 number="2"><span class="header-section-number">2</span> Multivariate examples</h1>
 <p>In the multivariate case when <span class="math inline">\(\boldsymbol{\theta}=(\theta_1, \ldots, \theta_d)\in{\mathbb R}^d\)</span>, we suggest to apply <span class="math inline">\(\hat{R}\)</span> on a multivariate indicator variable <span class="math inline">\(I_{\boldsymbol{x}}^{(j)} = \mathbb{I}\{\theta_1^{(j)} \leq x_1, \ldots, \theta_d^{(j)} \leq x_d\}\)</span> for any <span class="math inline">\(\boldsymbol{x} = (x_1, \ldots, x_d) \in \mathbb{R}^d\)</span> in two steps:</p>
-<pre><code>1. Compute the univariate $\hat{R}_{\infty,p}$ separately on each of the 
+<pre><code>1. Compute the univariate $\hat{R}_{\infty,p}$ separately on each of the
 coordinates $p\in\{1,\dots,d\}$.
-2. If $\hat{R}_{\infty,p} &lt; 1.01$ for all $p\in\{1,\dots,d\}$, then all 
+2. If $\hat{R}_{\infty,p} &lt; 1.03$ for all $p\in\{1,\dots,d\}$, then all
 margins are deemed to have converged and to be identically distributed.
-Compute the multivariate $\hat{R}^{(\text{max})}_\infty$ to check the convergence of the 
+Compute the multivariate $\hat{R}^{(\text{max})}_\infty$ to check the convergence of the
 dependence structure in all dependence directions. If the number of dimension is too high,
 compute a univarite $\hat{R}$ on the log-posterior.</code></pre>
 <p>Thus we recommend to compute the multivariate version only in the case where all the univariate one doesn’t detect any convergence issue, this is why in the part we will focus only of cases where the margins are the same (for example uniform).</p>
@@ -663,7 +663,7 @@ coda_multivariate_rhat &lt;- function(chaines){
 <p>We start by defining the function that will allows us to generate <span class="math inline">\(m\)</span> chains of size <span class="math inline">\(n\)</span> with this configuration :</p>
 <pre class="r"><code>gen_bvnormal_chains &lt;- function(M, N, rho){
   sig_matrix &lt;- (1-rho) * diag(2) + matrix(rho, nrow=2, ncol=2)
-  return (array(c(mvrnorm((M-1)*N, mu = rep(0, 2), Sigma = diag(2)), 
+  return (array(c(mvrnorm((M-1)*N, mu = rep(0, 2), Sigma = diag(2)),
                   mvrnorm(N, mu = rep(0, 2), Sigma = sig_matrix)), c(N,2,M)))
 }</code></pre>
 <p>As an example, we consider the case with <span class="math inline">\(m=2\)</span> chains of size <span class="math inline">\(n=200\)</span>, and <span class="math inline">\(\rho = 0.9\)</span> on the last chain. This choice of <span class="math inline">\(n\)</span> relatively small is due to the fact the elements in the chain are i.i.d here, so <span class="math inline">\(n\)</span> can be seen as an effective sample size for a given chain here.</p>
@@ -689,13 +689,13 @@ r_functions = c(brooks_multivariate_rhat, rhat_infinity)
 r_names = c(&quot;Brooks Multivariate R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors = c(colors[4], colors[3])
 
-R_matrix = repetitions_R(chains_func = (function() gen_bvnormal_chains(M, N, rho)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix = repetitions_R(chains_func = (function() gen_bvnormal_chains(M, N, rho)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
 xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1, 1.12)
-plot_hist(R_matrix, colors = r_colors, bin_size = 0.0045, 
+plot_hist(R_matrix, colors = r_colors, bin_size = 0.0045,
           lim_y_axis = 30, vaxis_pos = 0.995,
           xlabels = xlabels, plot_threshold = F)</code></pre>
 <p><img src="Simulations_files/figure-html/bivariate_hists2-1.png" width="1152" /></p>
@@ -719,18 +719,18 @@ theoretical_R &lt;- c()
 
 
 for (rho in rho_list){
-  R_val_rho = repetitions_R(chains_func = (function() gen_bvnormal_chains(M, N, rho)), 
-                                    r_func = r_functions, 
-                                    r_names = r_names, 
+  R_val_rho = repetitions_R(chains_func = (function() gen_bvnormal_chains(M, N, rho)),
+                                    r_func = r_functions,
+                                    r_names = r_names,
                                     reps = reps)
   R_values = rbind(R_values, R_val_rho)
   x_val = c(x_val, rep(rho, reps))
-  
+
   sig_matrix &lt;- (1-rho) * diag(2) + matrix(rho, nrow=2, ncol=2)
   dists &lt;- c((function(q) mvtnorm::pmvnorm(upper = q, sigma = diag(2))[1]),
              (function(q) mvtnorm::pmvnorm(upper = q, sigma = sig_matrix)[1]))
-  theoretical_R = c(theoretical_R, max_r_dist_bivariate(npoints = 200, 
-                                                        xlim = c(-3,3), 
+  theoretical_R = c(theoretical_R, max_r_dist_bivariate(npoints = 200,
+                                                        xlim = c(-3,3),
                                                         dists = dists))
 }
 
@@ -743,28 +743,28 @@ plot(x=x_val, y=R_values[,1],
      cex.lab = 2, cex.main = 2,
      lwd=9,
      xlim = c(-1.01, 1.02), ylim = c(0.999,1.105))
-points(x=x_val, y=R_values[,2], 
+points(x=x_val, y=R_values[,2],
        col = c(colors[4]), pch = 19,
        lwd=9)
 lines(rho_list, theoretical_R, type=&quot;l&quot;, col = colors[2], lwd=6, lty = 2)
-points(x=rho_list, y=theoretical_R, 
+points(x=rho_list, y=theoretical_R,
        col = c(colors[2]), pch = 19,
        lwd=9)
 xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1)
 ylabels = c(-1, -0.5, 0, 0.5, 1)
 axis(1, labels=ylabels, at=ylabels, cex.axis=2, lwd=3, mgp = c(1,1,0))
 axis(2, labels=xlabels, at=xlabels, cex.axis=2, mgp = c(1,0.5,0), lwd=2)
-legend(x=0.6, y=1.14, col=c(colors[4], colors[3], colors[2]), pch=19, 
+legend(x=0.6, y=1.14, col=c(colors[4], colors[3], colors[2]), pch=19,
        legend = c(expression(italic(hat(R))),
                   expression(italic(hat(R)[infinity])),
                   expression(italic(R[infinity]))), cex=2)</code></pre>
 <p><img src="Simulations_files/figure-html/bivariate_rho-1.png" width="1152" /></p>
 <p>Two remarks can be done here:</p>
-<pre><code>1. First, $\hat{R}_\infty$ seems to be more sensitive to the difference in the 
-copula, and this phenomenon increases with $|\rho|$ which was expected. 
+<pre><code>1. First, $\hat{R}_\infty$ seems to be more sensitive to the difference in the
+copula, and this phenomenon increases with $|\rho|$ which was expected.
 2. The asymmetry can be link to the theoretical computations.
-WARNING: The case $d=2$ is special: the orders on the two bounds PLOD and NLOD are 
-inverted compared to the asymptotic behavior, and that is why here we are 
+WARNING: The case $d=2$ is special: the orders on the two bounds PLOD and NLOD are
+inverted compared to the asymptotic behavior, and that is why here we are
 more sensitive when $\rho &lt; 0$ than when $\rho &gt;0$.</code></pre>
 </div>
 </div>
@@ -774,8 +774,8 @@ more sensitive when $\rho &lt; 0$ than when $\rho &gt;0$.</code></pre>
 <h3 number="2.2.1"><span class="header-section-number">2.2.1</span> Generation of a covariance matrix</h3>
 <p>In the general case, we still compare <span class="math inline">\(m-1\)</span> chains that follows a multivariate normal distribution with identity covariance matrix with one that has a given covariance matrix <span class="math inline">\(\Sigma\)</span>.</p>
 <p>We generate <span class="math inline">\(\Sigma\)</span> from a sample of a Wishart distribtution <span class="math inline">\(S\)</span>, and in order to keep the same margins for our chains, we transform <span class="math inline">\(S\)</span> to have ones on the diagonal : <span class="math display">\[
-\Sigma = D^{-1/2} S D^{-1/2}, 
-\quad \text{ with } \quad 
+\Sigma = D^{-1/2} S D^{-1/2},
+\quad \text{ with } \quad
 D = \text{Diag}\left(s_{1,1}, \ldots, s_{d,d}\right)
 \]</span></p>
 <p>From the theoretical part, we know that the value given by <span class="math inline">\(\hat{R}_\infty\)</span> depends on the direction of dependence. Thus, we can either fix <span class="math inline">\(\Sigma\)</span> and study the behaviour of the different <span class="math inline">\(\hat{R}\)</span>, or sample a new <span class="math inline">\(\Sigma\)</span> for each draw of <span class="math inline">\(\hat{R}\)</span>.</p>
@@ -789,8 +789,8 @@ gen_mvnormal_chains &lt;- function(M, N, d, S=NULL){
   if (is.null(S)){
     S &lt;- generate_sigma_matrix(d)
   }
-  return (array(c(mvrnorm((M-1)*N, mu = rep(0, d), Sigma = diag(d)), 
-                  mvrnorm(N, mu = rep(0, d), Sigma = S)), 
+  return (array(c(mvrnorm((M-1)*N, mu = rep(0, d), Sigma = diag(d)),
+                  mvrnorm(N, mu = rep(0, d), Sigma = S)),
                 c(N,d,M)))
 }</code></pre>
 <p>First, we start by considering <span class="math inline">\(d=5\)</span> and study the behavior of <span class="math inline">\(\hat{R}_\infty\)</span> and the multivariate <span class="math inline">\(\hat{R}\)</span> of Brooks and Gelman (1998) on a given <span class="math inline">\(\Sigma\)</span> for the last chain:</p>
@@ -812,12 +812,12 @@ print(S)</code></pre>
 [3,]  0.7434603 0.4345097  1.0000000 0.1837495 -0.2814009
 [4,]  0.1491803 0.8059773  0.1837495 1.0000000  0.2456532
 [5,] -0.1380975 0.5687374 -0.2814009 0.2456532  1.0000000</code></pre>
-<pre class="r"><code>R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d, S)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+<pre class="r"><code>R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d, S)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
-plot_hist(R_matrix, colors = r_colors, bin_size = 0.002, 
+plot_hist(R_matrix, colors = r_colors, bin_size = 0.002,
           lim_y_axis = 25, vaxis_pos = 1,
           plot_threshold = F)</code></pre>
 <p><img src="Simulations_files/figure-html/multivariate_hist1-1.png" width="1152" /></p>
@@ -832,14 +832,14 @@ r_functions &lt;- c(brooks_multivariate_rhat, rhat_infinity)
 r_names &lt;- c(&quot;Brooks Multivariate R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[3], colors[4])
 
-R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix &lt;- repetitions_R(chains_func = (function() gen_mvnormal_chains(M, N, d)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
 xlabels = c(1, 1.02, 1.04, 1.06, 1.08)
-plot_hist(R_matrix, colors = r_colors, 
-          xlabels = xlabels, bin_size = 0.002, 
+plot_hist(R_matrix, colors = r_colors,
+          xlabels = xlabels, bin_size = 0.002,
           lim_y_axis = 20, vaxis_pos = 0.997,
           plot_threshold = F)</code></pre>
 <p><img src="Simulations_files/figure-html/multivariate_hist2-1.png" width="1152" /></p>
@@ -917,7 +917,7 @@ parameters {
 
 model {
   for (d in 1:D)
-    bet[d] ~ normal(0, tau);    
+    bet[d] ~ normal(0, tau);
 
   for (n in 1:N)
     y[n] ~ bernoulli(inv_logit(dot_product(x[n], bet)));
@@ -974,11 +974,11 @@ bet[3]  -0.09   0.28   0.67   0.28 0.23  1.01      412      301     1.01
 bet[4]   0.02   0.40   0.79   0.41 0.25  1.01      366      263     1.01
 lp__   -56.71 -52.81 -51.61 -53.33 1.68  1.02      219      311     1.02
 
-For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
-effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
-per chain is considered good), and Rhat is the potential scale reduction 
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100
+per chain is considered good), and Rhat is the potential scale reduction
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
-<p>Despite a low number of iterations, all the different univariate <span class="math inline">\(\hat{R}_\infty\)</span> are mostly below <span class="math inline">\(1.02\)</span> when replicated, and the rank-<span class="math inline">\(\hat{R}\)</span> are below <span class="math inline">\(1.01\)</span>. We compare the proportion of <span class="math inline">\(\hat{R}^{(\text{max})}_\infty\)</span> replications over <span class="math inline">\(1.03\)</span>, with the proportion of univariate <span class="math inline">\(\hat{R}_\infty\)</span> for lp__ over <span class="math inline">\(1.02\)</span>:</p>
+<p>Despite a low number of iterations, all the different univariate <span class="math inline">\(\hat{R}_\infty\)</span> are below <span class="math inline">\(1.03\)</span> when replicated, and the rank-<span class="math inline">\(\hat{R}\)</span> are below <span class="math inline">\(1.01\)</span>. We compare the proportion of <span class="math inline">\(\hat{R}^{(\text{max})}_\infty\)</span> replications over <span class="math inline">\(1.03\)</span>, with the proportion of univariate <span class="math inline">\(\hat{R}_\infty\)</span> for lp__ over <span class="math inline">\(1.02\)</span>:</p>
 <pre class="r"><code>reps &lt;- 50
 
 gen_beta_logit &lt;- function(i){
@@ -988,9 +988,9 @@ gen_beta_logit &lt;- function(i){
   # saveRDS(fit_logit, paste(stan_folder, &quot;logit/logit_reg_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
   fit_logit &lt;- readRDS(paste(stan_folder, &quot;logit/logit_reg_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
   mon &lt;- monitor(fit_logit)
-  
+
   chains &lt;- as.array(fit_logit)
-  
+
   return (aperm(chains, c(1,3,2)))
 }
 
@@ -998,9 +998,9 @@ r_functions = c(brooks_multivariate_rhat, rhat_infinity_max_directions)
 r_names = c(&quot;Brooks Multivariate R-hat&quot;, &quot;max-R-hat&quot;)
 r_colors = c(colors[4], colors[2])
 
-R_matrix_logit &lt;- repetitions_R(chains_func = gen_beta_logit, 
-                                 r_func = r_functions, 
-                                 r_names = r_names, 
+R_matrix_logit &lt;- repetitions_R(chains_func = gen_beta_logit,
+                                 r_func = r_functions,
+                                 r_names = r_names,
                                  reps = reps, saved_model = TRUE)
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04, 1.05)
@@ -1021,9 +1021,9 @@ r_names &lt;- c(&quot;R-hat&quot;,
              &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_logit2 &lt;- repetitions_R(chains_func = gen_beta_logit_lp, 
-                                 r_func = r_functions, 
-                                 r_names = r_names, 
+R_matrix_logit2 &lt;- repetitions_R(chains_func = gen_beta_logit_lp,
+                                 r_func = r_functions,
+                                 r_names = r_names,
                                  reps = reps, saved_model = TRUE)
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04, 1.05)
@@ -1040,7 +1040,7 @@ plot_hist(R_matrix_logit2, colors = r_colors, vaxis_pos = 0.998,
 <div id="autoregressive-model" class="section level2" number="3.1">
 <h2 number="3.1"><span class="header-section-number">3.1</span> Autoregressive model</h2>
 <p>We start by running a basic autoreggressive model to study the case of a Markov chain with different variance on the chains: <span class="math display">\[\begin{equation*}
-  \theta^{(i+1,j)} = \rho \theta^{(i,j)} + \epsilon_{i,j}, 
+  \theta^{(i+1,j)} = \rho \theta^{(i,j)} + \epsilon_{i,j},
   \quad \text{with} \quad
   \epsilon_{i,j} \sim \mathcal{N}(0,\sigma^2_j),
 \end{equation*}\]</span> where <span class="math inline">\(\rho \in (0,1)\)</span> and <span class="math inline">\(\sigma_j &gt; 0\)</span>.</p>
@@ -1057,7 +1057,7 @@ plot_hist(R_matrix_logit2, colors = r_colors, vaxis_pos = 0.998,
 }
 
 gen_autoreg_chains &lt;- function(M, N, rho, sigma, sigmaM){
-  return (array(c(replicate(M-1, autoregressive(N, rho, sigma)), 
+  return (array(c(replicate(M-1, autoregressive(N, rho, sigma)),
                   autoregressive(N, rho, sigmaM)), c(N,M)))
 }</code></pre>
 <p>Clearly <span class="math inline">\(\hat{R}_\infty\)</span> diagnose a convergence issue:</p>
@@ -1085,12 +1085,12 @@ r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
 R_matrix_autoreg &lt;- repetitions_R(
-  chains_func = (function() gen_autoreg_chains(M, N, rho, sigma, sigmaM)), 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+  chains_func = (function() gen_autoreg_chains(M, N, rho, sigma, sigmaM)),
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps)
 
-plot_hist(R_matrix_autoreg, colors = r_colors, 
+plot_hist(R_matrix_autoreg, colors = r_colors,
           xlabels = c(1, 1.02, 1.04, 1.06, 1.08, 1.1),
           bin_size = 0.004, lim_y_axis = 20)</code></pre>
 <p><img src="Simulations_files/figure-html/autoreg_hist-1.png" width="1152" /></p>
@@ -1129,9 +1129,9 @@ subset(mon, Rhat == max_rhat)</code></pre>
         Q5  Q50    Q95  Mean   SD  Rhat Bulk_ESS Tail_ESS
 x[18] -4.1 0.56 172.82 35.87 65.4  1.54        7       32
 
-For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
-effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
-per chain is considered good), and Rhat is the potential scale reduction 
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100
+per chain is considered good), and Rhat is the potential scale reduction
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
 <p>Plot of <span class="math inline">\(\hat{R}(x)\)</span>:</p>
 <pre class="r"><code>chains &lt;- as.array(fit_nom)
@@ -1167,14 +1167,14 @@ plot_local_r(chains[ , , which_max_rhat_inf], simulated_rhat,
   # fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_nom.stan&quot;, sep=&quot;&quot;), refresh = 0)
   # saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_fits/cauchy_nom_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
   fit_nom &lt;- readRDS(paste(stan_folder, &quot;cauchy_fits/cauchy_nom_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
-  
-  
+
+
   mon &lt;- monitor(fit_nom)
   chains &lt;- as.array(fit_nom)
   dim_chains &lt;- dim(chains)
-  
+
   rhat_inf &lt;- c()
-  
+
   for (i in 1:dim_chains[3]) {
     chains_i &lt;- chains[, , i]
     rhat_inf_i &lt;- rhat_infinity(chains_i)
@@ -1182,7 +1182,7 @@ plot_local_r(chains[ , , which_max_rhat_inf], simulated_rhat,
   }
   mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
   which_max_rhat_inf &lt;- which.max(mon[1:50, &#39;Rhat_inf&#39;])
-  
+
   return (chains[, , which_max_rhat_inf])
 }
 
@@ -1190,9 +1190,9 @@ r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_cauchy &lt;- repetitions_R(chains_func = gen_diverging_cauchy, 
-                                 r_func = r_functions, 
-                                 r_names = r_names, 
+R_matrix_cauchy &lt;- repetitions_R(chains_func = gen_diverging_cauchy,
+                                 r_func = r_functions,
+                                 r_names = r_names,
                                  reps = reps, saved_model = TRUE)
 
 xlabels = c(1, 1.1, 1.2, 1.3, 1.4)
@@ -1235,9 +1235,9 @@ subset(mon, Rhat == max_rhat)</code></pre>
          Q5  Q50  Q95  Mean     SD  Rhat Bulk_ESS Tail_ESS
 x[40] -6.22 0.03 6.33 -6.15 204.09     1     3667     2250
 
-For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
-effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
-per chain is considered good), and Rhat is the potential scale reduction 
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100
+per chain is considered good), and Rhat is the potential scale reduction
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
 <p>Plot of <span class="math inline">\(\hat{R}(x)\)</span>:</p>
 <pre class="r"><code>chains &lt;- as.array(fit_alt1)
@@ -1263,7 +1263,7 @@ At 5%, no convergence issues have been diagnosed</code></pre>
 <pre class="r"><code>simulated_rhat = all_local_rhat(chains[ , , which_max_rhat_inf], max_nb_points = &quot;ALL&quot;)
 
 xlabels = c(1, 1.01, 1.02, 1.03)
-plot_local_r(chains[, , which_max_rhat], simulated_rhat, 
+plot_local_r(chains[, , which_max_rhat], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(-4,4), ylim=c(0.9995,1.03), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-29-1.png" width="1152" /></p>
@@ -1272,13 +1272,13 @@ plot_local_r(chains[, , which_max_rhat], simulated_rhat,
   # fit_nom &lt;- stan(file = paste(stan_folder, &quot;cauchy_alt_1.stan&quot;, sep=&quot;&quot;), refresh = 0)
   # saveRDS(fit_nom, paste(stan_folder, &quot;cauchy_fits/cauchy_alt_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
   fit_nom &lt;- readRDS(paste(stan_folder, &quot;cauchy_fits/cauchy_alt_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
-  
+
   mon &lt;- monitor(fit_nom)
   chains &lt;- as.array(fit_nom)
   dim_chains &lt;- dim(chains)
-  
+
   rhat_inf &lt;- c()
-  
+
   for (i in 1:dim_chains[3]) {
     chains_i &lt;- chains[, , i]
     rhat_inf_i &lt;- rhat_infinity(chains_i)
@@ -1286,7 +1286,7 @@ plot_local_r(chains[, , which_max_rhat], simulated_rhat,
   }
   mon[[&quot;Rhat_inf&quot;]] &lt;- rhat_inf
   which_max_rhat_inf &lt;- which.max(mon[101:150, &#39;Rhat_inf&#39;])
-  
+
   return (chains[, , which_max_rhat_inf])
 }
 
@@ -1294,9 +1294,9 @@ r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_cauchy2 &lt;- repetitions_R(chains_func = gen_converging_cauchy, 
-                                  r_func = r_functions, 
-                                  r_names = r_names, 
+R_matrix_cauchy2 &lt;- repetitions_R(chains_func = gen_converging_cauchy,
+                                  r_func = r_functions,
+                                  r_names = r_names,
                                   reps = reps,
                                   saved_model = TRUE)
 
@@ -1329,7 +1329,7 @@ model {
   y ~ normal(theta, sigma);
 }</code></pre>
 <p>As a classical Bayesian example, we consider using HMC on a hierarchical Bayesian model and in particular the eight-school, where two parameterisations are possible to model the problem:</p>
-<pre><code>1. Centered parameterisation (CP): 
+<pre><code>1. Centered parameterisation (CP):
 $\theta_j \sim \mathcal{N}(\mu,\tau), \quad y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$
 2. Non-centered parameterisation (NCP):
 $\bar{\theta}_j \sim \mathcal{N}(0,1), \quad  \theta_j = \mu + \tau \bar{\theta}_j, \quad y_j \sim \mathcal{N}(\theta_j,\sigma^2_j)$</code></pre>
@@ -1362,9 +1362,9 @@ theta[7]  -0.77   6.65 15.36   6.74 5.03  1.01      525      844
 theta[8]  -3.48   5.46 13.39   5.31 5.32  1.02      467     1290
 lp__     -25.23 -14.77 -2.54 -14.33 7.04  1.08       46      104
 
-For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
-effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
-per chain is considered good), and Rhat is the potential scale reduction 
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100
+per chain is considered good), and Rhat is the potential scale reduction
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
 <p>Plot of <span class="math inline">\(\hat{R}(x)\)</span></p>
 <pre class="r"><code>chains &lt;- as.array(fit_cp)
@@ -1374,7 +1374,7 @@ simulated_rhat = all_local_rhat(chains[, , &quot;tau&quot;], max_nb_points = &qu
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
 
-plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat, 
+plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(0,25), ylim=c(0.999,1.04), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-34-1.png" width="1152" /></p>
@@ -1387,7 +1387,7 @@ plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat,
   # )
   # saveRDS(fit_cp, paste(stan_folder, &quot;eight_schools_fits/eight_schools_cp_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
   fit_cp &lt;- readRDS(paste(stan_folder, &quot;eight_schools_fits/eight_schools_cp_&quot;, i, &quot;.rds&quot;, sep=&quot;&quot;))
-  
+
   mon &lt;- monitor(fit_cp)
   chains &lt;- as.array(fit_cp)
 
@@ -1398,9 +1398,9 @@ r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_8schools &lt;- repetitions_R(chains_func = gen_centered_eight_school, 
-                                   r_func = r_functions, 
-                                   r_names = r_names, 
+R_matrix_8schools &lt;- repetitions_R(chains_func = gen_centered_eight_school,
+                                   r_func = r_functions,
+                                   r_names = r_names,
                                    reps = reps,
                                    saved_model = TRUE)
 
@@ -1492,9 +1492,9 @@ theta[7]        -1.04  6.01 15.22  6.37 5.07     1     5121     3569
 theta[8]        -3.13  4.90 13.09  4.95 5.19     1     5124     3452
 lp__           -11.02 -6.52 -3.62 -6.83 2.31     1     1850     2629
 
-For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
-effective sample size for bulk and tail quantities respectively (an ESS &gt; 100 
-per chain is considered good), and Rhat is the potential scale reduction 
+For each parameter, Bulk_ESS and Tail_ESS are crude measures of
+effective sample size for bulk and tail quantities respectively (an ESS &gt; 100
+per chain is considered good), and Rhat is the potential scale reduction
 factor on rank normalized split chains (at convergence, Rhat &lt;= 1.01).</code></pre>
 <p>Plot of <span class="math inline">\(\hat{R}(x)\)</span>:</p>
 <pre class="r"><code>chains &lt;- as.array(fit_ncp2)
@@ -1503,7 +1503,7 @@ dim_chains &lt;- dim(chains)
 simulated_rhat = all_local_rhat(chains[, , &quot;tau&quot;], max_nb_points = &quot;ALL&quot;)
 
 xlabels = c(1, 1.01, 1.02, 1.03, 1.04)
-plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat, 
+plot_local_r(chains[, , &quot;tau&quot;], simulated_rhat,
              col=c(colors[3], colors[2]), xlabels = xlabels,
              xlim = c(0,25), ylim=c(0.999,1.04), title =&quot;&quot;)</code></pre>
 <p><img src="Simulations_files/figure-html/unnamed-chunk-39-1.png" width="1152" /></p>
@@ -1526,9 +1526,9 @@ r_functions &lt;- c(trad_rhat, rhat, rhat_infinity)
 r_names &lt;- c(&quot;R-hat&quot;, &quot;Rank-R-hat&quot;, &quot;R-hat-infinity&quot;)
 r_colors &lt;- c(colors[4], colors[5], colors[3])
 
-R_matrix_8schools2 &lt;- repetitions_R(chains_func = gen_ncp_eight_school, 
-                         r_func = r_functions, 
-                         r_names = r_names, 
+R_matrix_8schools2 &lt;- repetitions_R(chains_func = gen_ncp_eight_school,
+                         r_func = r_functions,
+                         r_names = r_names,
                          reps = reps,
                          saved_model = TRUE)
 
@@ -1544,10 +1544,10 @@ plot_hist(R_matrix_8schools2, colors = r_colors, xlabels = xlabels,
 <pre class="r"><code>data=data.frame(r_version, r_experiment,  r_values)
 
 ggplot(data, aes(x=r_experiment, y=r_values, fill=r_version)) +
-    geom_boxplot() + 
-    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;, 
+    geom_boxplot() +
+    geom_hline(yintercept=1.01, linetype=&quot;dashed&quot;,
                color = &quot;black&quot;, size=0.5) +
-      geom_hline(yintercept=1.02, linetype=&quot;dashed&quot;, 
+      geom_hline(yintercept=1.02, linetype=&quot;dashed&quot;,
              color = &quot;green&quot;, size=0.5) +
     xlab(&quot;Experiments&quot;) + ylab(&quot;Values&quot;) + ylim(1, 1.3)</code></pre>
 <pre><code>Warning: Removed 36 rows containing non-finite values (stat_boxplot).</code></pre>
