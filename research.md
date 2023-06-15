@@ -8,11 +8,11 @@ show-avatar: True
 
 #### Under review
 
-* T. Moins, J. Arbel, S. Girard, & A. Dutfoy. "*Reparameterization of extreme value framework for improved Bayesian workflow*", 2022+ ([PDF](https://arxiv.org/abs/2210.05224){:target="_blank"}, [Code](https://github.com/TheoMoins/ExtremesPyMC){:target="_blank"})
-
 * T. Moins, J. Arbel, S. Girard, & A. Dutfoy. "*On the use of a local R-hat to improve MCMC convergence diagnostic*", 2022+ ([PDF](https://arxiv.org/abs/2205.06694){:target="_blank"}, [Online appendix](https://theomoins.github.io/localrhat/Simulations.html){:target="_blank"}, [Code](https://github.com/TheoMoins/localrhat){:target="_blank"})
 
 #### Published
+
+* T. Moins, J. Arbel, S. Girard, & A. Dutfoy. "*Reparameterization of extreme value framework for improved Bayesian workflow*" **Computational Statistics and Data Analysis*, to appear, 2023 ([PDF](https://arxiv.org/abs/2210.05224){:target="_blank"}, [Code](https://github.com/TheoMoins/ExtremesPyMC){:target="_blank"})
 
 * T. Moins, J. Arbel, A. Dutfoy & S. Girard. Contributed iscussion of "*Rank-Normalization, Folding, and Localization: An Improved R-hat for Assessing Convergence of MCMC" by Vehtari et al.*" **Bayesian Analysis**, 2021 ([PDF](https://hal.inria.fr/hal-03222934){:target="_blank"})
 
@@ -23,7 +23,9 @@ show-avatar: True
 
 #### 2023
 
-* **Invited Seminar** (upcoming, 17/02): MAP5 - Mathématiques Appliquées à Paris 5 : "*Reparameterization of extreme value framework for improved Bayesian workflow*" ([Link](https://map5.mi.parisdescartes.fr/seminairesMAP5/exposes/theo-moins-inria/){:target="_blank"})
+* **EVA 2023**, **Invited** Talk (upcoming, 27/06): "*Reparameterization of extreme value framework for improved Bayesian workflow*" ([Link](https://dec.unibocconi.eu/research/extreme-value-analysis-eva-2023){:target="_blank"})
+* **Journée AppliBUGS**, **Invited** Talk:"*Reparameterization of extreme value framework for improved Bayesian workflow*" ([Link](https://applibugs.mathnum.inrae.fr/){:target="_blank"})
+* **Invited Seminar**: MAP5 - Mathématiques Appliquées à Paris 5 : "*Reparameterization of extreme value framework for improved Bayesian workflow*" ([Link](https://map5.mi.parisdescartes.fr/events/theo-moins-statify-inria-grenoble-rhone-alpes/){:target="_blank"})
 
 
 #### 2022
