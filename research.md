@@ -61,6 +61,7 @@ show-avatar: True
 ## Reviewing
 
 * **Statistical Papers**, Journal, 2021
+* **REVSTAT**, Journal, 2023
 
 <p>&nbsp;</p>
 
