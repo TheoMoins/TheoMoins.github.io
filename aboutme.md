@@ -5,7 +5,7 @@ subtitle: About me
 show-avatar: False
 ---
 
-<img style="float: right;" src="/assets/img/photo_webpage2.jpg" height="400" hspace="30" vspace="20">
+<img style="float: initial;" src="/assets/img/photo_webpage2.jpg" height="400" hspace="30" vspace="20">
 
 {: style="text-align: justify"}
 Hi! I'm a research engineer in the [LostMa](https://www.chartes.psl.eu/en/research/centre-jean-mabillon/research-projects/lostma-lost-manuscripts-medieval-europe-modelling-transmission-texts) project, at [École nationale des chartes](https://www.chartes.psl.eu/en) ([PSL](https://psl.eu/)). The aim of the project is to make inference on chivalric literature using statistical and computational tools in order to study the transmission of written cultural artefacts.
