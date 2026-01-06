@@ -9,7 +9,9 @@ show-avatar: True
 
 #### Published
 
-* T. Moins, J. Arbel, S. Girard, & A. Dutfoy. "*On the use of a local R-hat to improve MCMC convergence diagnostic*" **Bayesian Analysis**, 2023 ([PDF](https://arxiv.org/abs/2205.06694){:target="_blank"}, [Online appendix](https://theomoins.github.io/localrhat/Simulations.html){:target="_blank"}, [Code](https://github.com/TheoMoins/localrhat){:target="_blank"})
+* E. Guidi, T. Moins & J-B. Camps. "*Transmission and Survival of Iberian Patristic Texts (3rd–5th Centuries).*" **Anthology of Computers and the Humanities**, 2025. ([PDF](https://doi.org/10.63744/WVZDLY7xI2fT){:target="_blank"})
+
+* T. Moins, J. Arbel, S. Girard, & A. Dutfoy. "*On the use of a local R-hat to improve MCMC convergence diagnostic*" **Bayesian Analysis**, 2025 ([PDF](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/On-the-Use-of-a-Local-R%CB%86-to-Improve-MCMC/10.1214/23-BA1399.full){:target="_blank"}, [Online appendix](https://theomoins.github.io/localrhat/Simulations.html){:target="_blank"}, [Code](https://github.com/TheoMoins/localrhat){:target="_blank"})
 
 * T. Moins, J. Arbel, S. Girard, & A. Dutfoy. "*Reparameterization of extreme value framework for improved Bayesian workflow*" **Computational Statistics and Data Analysis**, 2023 ([PDF](https://arxiv.org/abs/2210.05224){:target="_blank"}, [Code](https://github.com/TheoMoins/ExtremesPyMC){:target="_blank"})
 
@@ -19,6 +21,16 @@ show-avatar: True
 
 
 ## Presentations
+
+#### 2025
+
+
+* **CHR 2025**, **Invited** Talk: "*Transmission and Survival of Iberian Patristic texts (3rd–5th Centuries).*" Jointly with E.Guidi. ([Link](https://2025.computational-humanities-research.org/programme/#thursday){:target="_blank"})
+* **DH 2025**, Contributed Talk: "*One tree to yule them all? reflexions on intertextuality and text transmission.*" Jointly with J.-B. Camps, K. Christensen & U. Godreau. ([Link](https://dh2025.adho.org/){:target="_blank"})
+* **DH Benelux 2025**, Contributed Talk: "*Style in Eight Syllables: Metric Annotation and Stylometry of Chrétien de Troyes and Contemporaries.*" Jointly with D. Conceicao and J-B Camps ([Link](https://2025.dhbenelux.org/schedule/){:target="_blank"})
+* **Invited Seminar**: Evolution and Social Cognition Team at Institut Jean-Nicod : "*Are fictions more derivative or innovative? An experiment based on European Medieval Literature*" Jointly with J-B Camps, U. Godreau and K. Christensen. 
+
+
 
 #### 2023
 
@@ -51,6 +63,8 @@ show-avatar: True
 
 
 ## Thesis
+
+* T. Moins. "*Bayesian computational methods for estimating extreme quantiles from environmental data*". **Thèse de doctorat, Université Grenoble Alpes**, 2023 ([PDF](https://theses.hal.science/tel-04469538){:target="_blank"})
 
 * T. Moins. "*Modèle hybride combinant réseau de neurones convolutifs et modèle basé sur le choix pour la recommandation de sièges*". **Mémoire de maîtrise recherche, Polytechnique Montréal**, 2020 ([PDF](https://publications.polymtl.ca/5336/){:target="_blank"})
 
