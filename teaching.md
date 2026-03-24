@@ -8,7 +8,7 @@ show-avatar: True
 ### École nationale des chartes - PSL
 
 * 2025 Fundamentals of Mathematics (Refresher course for master’s students in digital humanities, 20h.)
-* <a href="/assets/pdf/cours_stats.pdf" target="_blank">Link to the PDF (in French)</a>
+* <a href="/assets/pdf/Cours_Introduction_Maths-2.pdf" target="_blank">Link to the PDF (in French)</a>
 
 <p>&nbsp;</p>
 
